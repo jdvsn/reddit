@@ -1,0 +1,53 @@
+{% extends 'posts/base.html' %}
+
+{% block content %}
+<header class="home">
+<h1>All posts</h1>
+</header>
+
+<div class="posts">
+    <header class="sort">
+        <div class="sort">
+            <div>
+                <a href={% url 'home_top' %}>top</a>
+            </div>
+            <div>
+                <a href={% url 'home_new' %}>new</a>
+            </div>
+        </div>
+        <div class="submit">
+            submit
+        </div>
+    </header>
+    {% for p in post_list %}
+    <div class="post">
+        <div class="votes">
+            <form action={% url 'post_vote' p.subreddit.url p.url %} method="post">
+                {% csrf_token %}
+                <input type="hidden" name="vote" value="up">
+                <input class="upvote" type="submit" value="▲">
+            </form>
+            <div class="score">{{ p.vote_total }}</div>
+            <form action={% url 'post_vote' p.subreddit.url p.url %} method="post">
+                {% csrf_token %}
+                <input type="hidden" name="vote" value="down">
+                <input class="downvote" type="submit" value="▼">
+            </form>
+        </div>
+        <div class="postdetails">
+            <div class="postinfo">
+                posted {{ p.when }} to <i><a href={% url 'subreddit' p.subreddit.url %}>r/{{ p.subreddit }}</a></i> by {{ p.created_by }} | {{ p.comment_count }} comments
+            </div>
+            <div class="postpreview">
+                <div>
+                    <h2><a href={% url 'post_detail' p.subreddit.url p.url %}>{{ p.post_title }}</a></h2>
+                </div>
+                <div>
+                    <p> {{ p.preview }} </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

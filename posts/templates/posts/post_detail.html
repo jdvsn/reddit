@@ -1,0 +1,90 @@
+{% extends 'posts/base.html' %}
+
+{% block content %}
+<a href={% url 'subreddit' post.subreddit.url %}>r/{{ post.subreddit.subreddit_name }}</a>
+
+<form action={% url 'post_vote' post.subreddit.url post.url %} method="post">
+    {% csrf_token %}
+    <input type="hidden" name="vote" value="up">
+    <input class="upvote" type="submit" value="▲">
+</form>
+<h1>
+    <font size='5'>{{ post.vote_total }}</font>
+    <font size='5'>{{ post.post_title }}</font>
+</h1>
+<form action={% url 'post_vote' post.subreddit.url post.url %} method="post">
+    {% csrf_token %}
+    <input type="hidden" name="vote" value="down">
+    <input class="downvote" type="submit" value="▼">
+</form>
+<font size='2'>Posted by {{ post.created_by }} {{ post.when }}</font>
+
+<p>
+<font size='5'>
+    {{ post.post_body }}
+</font>
+</p>
+
+<p>
+<font size='4'>
+    Comments ({{ post.comment_count }}) :
+</font>
+</p>
+
+<form action="" method="post">
+    {% csrf_token %}
+    {{ comment_form.as_p }}
+    <input type="submit" value="Submit">
+</form>
+
+<ul>
+    {% for c in post.comments.all %}
+    {% if c.reply == None %}
+    <li>
+        <font size='3'><p>{{ c.comment_text }}</p></font>
+        <form action={% url 'comment_vote' post.subreddit.url post.url c.id %} method="post">
+            {% csrf_token %}
+            <input type="hidden" name="vote" value="up">
+            <input class="upvote" type="submit" value="▲">
+        </form>
+        <form action={% url 'comment_vote' post.subreddit.url post.url c.id %} method="post">
+            {% csrf_token %}
+            <input type="hidden" name="vote" value="down">
+            <input class="downvote" type="submit" value="▼">
+        </form>
+            
+        <details>
+            <summary>
+                <font size='2'>Reply | {{ c.vote_total }} points | {{ c.when }} by {{ c.created_by }}</font>
+            </summary>
+            <form action="" method="post">
+                {% csrf_token %}
+                {{ comment_form.as_p }}
+                <input type="hidden" name="reply_id" value="{{ c.id }}">
+                <button class="btn btn-primary mt-md-1" type="submit" value="Reply">Reply</button>
+            </form>
+        </details>
+                
+            <ul>
+                {% for cr in c.replies.all %}  
+                <li>
+                    <font size='3'><p> {{ cr.comment_text }}</p></font>
+                    <form action={% url 'comment_vote' post.subreddit.url post.url cr.id %} method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="vote" value="up">
+                        <input class="upvote" type="submit" value="▲">
+                    </form>
+                    <form action={% url 'comment_vote' post.subreddit.url post.url cr.id %} method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="vote" value="down">
+                        <input class="downvote" type="submit" value="▼">
+                    </form>
+                    <font size='2'>{{ cr.vote_total }} points | {{ cr.when }} by {{ cr.created_by }}</font> 
+                </li>
+                {% endfor %}  
+            </ul>
+    </li>
+    {% endif %}
+    {% endfor %}
+</ul>
+{% endblock %}

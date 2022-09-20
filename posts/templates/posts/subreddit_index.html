@@ -1,0 +1,13 @@
+{% extends 'posts/base.html' %}
+
+{% block content %}
+<h1>All subreddits</h1>
+<a href={% url 'subreddit_create' %}>Create a new subreddit</a>
+<ul>
+    {% for s in subreddit_list %}
+    <li>
+        <a href={% url 'subreddit' s.url %}>{{ s.subreddit_name }}</a>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}

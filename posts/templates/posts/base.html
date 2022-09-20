@@ -1,0 +1,39 @@
+{% load static %}
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Reddit</title>
+        <link rel="stylesheet" href="{% static 'styles.css' %}"
+    </head>
+    <body>
+        <header class="wrapper">
+            <nav>
+                <ul>
+                    <li><a href={% url 'home' %}>home</a></li>
+                    <li><a href={% url 'subreddit_index' %}>all subreddits</a></li>
+                </ul>
+            </nav>
+            <div class="header accounts">
+                <ul>
+                    {% if user.is_authenticated %}
+                        <li><a>u/{{ user }}</a></li>
+                        <li>
+                            <form action={% url 'logout' %}>
+                                {% csrf_token %}
+                                <button type="submit">logout</button>
+                            </form>
+                        </li>   
+                    {% else %}
+                    <li><a href={% url 'login' %}>login</a></li>
+                    <li><a href={% url 'register' %}>register</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </header>
+        <main>
+            {% block content %}
+            {% endblock %}
+        </main>
+    </body>
+</html>
