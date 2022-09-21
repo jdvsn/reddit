@@ -1,6 +1,7 @@
 from django.views import generic
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
+from django.urls import reverse
 from django.utils.text import slugify
 from django.contrib.auth.decorators import login_required
 
@@ -42,9 +43,9 @@ def subreddit_create(request):
         if form.is_valid():
             subreddit = form.save(commit=False)
             subreddit.created_by = request.user
-            subreddit.save
+            subreddit.save()
             url = slugify(form.cleaned_data['subreddit_name'])
-            return HttpResponseRedirect('/r/%s' % (url))
+            return HttpResponseRedirect(reverse('subreddit', args=[url]))
     else:
         form = SubredditForm()
     return render(request, 'posts/subreddit_create.html', {'form': form})
@@ -58,7 +59,7 @@ def post_create(request, subreddit_url):
             post.created_by = request.user
             post.save()
             url = slugify(form.cleaned_data['post_title'])
-            return HttpResponseRedirect('/r/%s/comments/%s' % (subreddit_url, url))
+            return HttpResponseRedirect(reverse('post_detail', args=[subreddit_url, url]))
     else:
         form = PostForm()
     return render(request, 'posts/post_create.html', {
@@ -88,7 +89,7 @@ def post_detail(request, post_url, subreddit_url):
                         Comment(comment_text=comment, reply=reply_obj, post=post, created_by=request.user).save()
                 else:
                     Comment(comment_text=comment, post=post, created_by=request.user).save()
-                return HttpResponseRedirect('/r/%s/comments/%s' % (subreddit_url, post_url))  
+                return HttpResponseRedirect(reverse('post_detail', args=[subreddit_url, post_url]))  
     else:
         comment_form = CommentForm()
     return render(request, template, {

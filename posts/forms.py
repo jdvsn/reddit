@@ -14,7 +14,8 @@ class SubredditForm(ModelForm):
                 'placeholder': 'Enter subreddit name',
                 })
             }
-        
+        error_messages = {'subreddit_name': {'unique': 'A subreddit with this name already exists.'}}
+
 class PostForm(ModelForm):
     class Meta:
         model = Post

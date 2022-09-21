@@ -8,7 +8,7 @@ class Subreddit(models.Model):
     class Meta:
         ordering = ['subreddit_name']
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
-    subreddit_name = models.CharField(max_length=20)
+    subreddit_name = models.CharField(max_length=20, unique=True)
     url = models.SlugField()
 
     def sorted_new(self):
@@ -30,7 +30,7 @@ class Post(models.Model):
     created_by = models.ForeignKey(User, related_name='posts', on_delete=models.CASCADE)
     subreddit = models.ForeignKey(Subreddit, related_name='posts', on_delete=models.CASCADE)
     post_title = models.CharField(max_length=50)
-    post_body = models.TextField(max_length=500)
+    post_body = models.TextField(max_length=500, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     score = models.IntegerField(default=0)
     url = models.SlugField()
