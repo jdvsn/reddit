@@ -14,7 +14,7 @@ class TestPostCreatePage(StaticLiveServerTestCase):
         self.user.set_password('password')
         self.user.save()  
         self.subreddit = Subreddit.objects.create(subreddit_name='test', created_by=self.user)
-        self.post_create_page = reverse('post_create', args=[self.subreddit])
+        self.post_create_page = reverse('post_create', args=[self.subreddit.url])
 
     def tearDown(self):
         self.browser.close()    
@@ -41,8 +41,7 @@ class TestPostCreatePage(StaticLiveServerTestCase):
         self.browser.find_element('name', 'submit').click()
         self.assertEqual(
             self.browser.current_url, 
-            self.live_server_url + reverse('post_create')
-            )
+            self.live_server_url + self.post_create_page)
 
     def test_post_create_form_success(self):
         force_login(self.user, self.browser, self.live_server_url)
@@ -53,8 +52,7 @@ class TestPostCreatePage(StaticLiveServerTestCase):
         self.browser.find_element('name', 'submit').click()
         self.assertEqual(
             self.browser.current_url, 
-            self.live_server_url + reverse('post_detail', args=[self.subreddit.url, self.subreddit.posts.get(id=1).url])
-            )
+            self.live_server_url + reverse('post_detail', args=[self.subreddit.url, self.subreddit.posts.get(id=1).url]))
         self.assertEqual(
             self.browser.find_element(By.TAG_NAME, 'h1').text, 
             'test post'
