@@ -18,19 +18,28 @@ class TestSubredditCreatePage(StaticLiveServerTestCase):
 
     def test_subreddit_create_requires_login(self):
         self.browser.get(self.live_server_url + reverse('subreddit_create'))
-        self.assertEqual(self.browser.current_url, self.live_server_url + '/login/?next=/subreddits/create/')
+        self.assertEqual(
+            self.browser.current_url,
+            self.live_server_url + '/login/?next=%s' % reverse('subreddit_create')
+            )
 
-    def test_subreddit_create_form_is_displayed(self):
+    def test_subreddit_create_form_is_displayed_when_logged_in(self):
         force_login(self.user, self.browser, self.live_server_url)
         self.browser.get(self.live_server_url + reverse('subreddit_create'))
         self.assertIsNotNone(self.browser.find_element(By.CLASS_NAME, 'subreddit-create-form'))
-        self.assertEqual(self.browser.current_url, self.live_server_url + reverse('subreddit_create'))
+        self.assertEqual(
+            self.browser.current_url, 
+            self.live_server_url + reverse('subreddit_create')
+            )
 
     def test_subreddit_create_form_invalid(self):
         force_login(self.user, self.browser, self.live_server_url)
         self.browser.get(self.live_server_url + reverse('subreddit_create'))
         self.browser.find_element('name', 'submit').click()
-        self.assertEqual(self.browser.current_url, self.live_server_url + reverse('subreddit_create'))
+        self.assertEqual(
+            self.browser.current_url, 
+            self.live_server_url + reverse('subreddit_create')
+            )
 
 
     def test_subreddit_create_form_success(self):
@@ -38,5 +47,11 @@ class TestSubredditCreatePage(StaticLiveServerTestCase):
         self.browser.get(self.live_server_url + reverse('subreddit_create'))
         self.browser.find_element('name', 'subreddit_name').send_keys('test')
         self.browser.find_element('name', 'submit').click()
-        self.assertEqual(self.browser.current_url, self.live_server_url + reverse('subreddit', args=['test']))
-        self.assertEqual(self.browser.find_element(By.TAG_NAME, 'h1').text, 'r/test')
+        self.assertEqual(
+            self.browser.current_url, 
+            self.live_server_url + reverse('subreddit', args=['test'])
+            )
+        self.assertEqual(
+            self.browser.find_element(By.TAG_NAME, 'h1').text, 
+            'r/test'
+            )

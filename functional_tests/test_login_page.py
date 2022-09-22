@@ -22,12 +22,18 @@ class TestLoginPage(StaticLiveServerTestCase):
     def test_login_form_invalid(self):
         self.browser.get(self.live_server_url + reverse('login'))
         self.browser.find_element('name', 'submit').click()
-        self.assertEqual(self.browser.current_url, self.live_server_url + reverse('login'))
+        self.assertEqual(
+            self.browser.current_url, 
+            self.live_server_url + reverse('login')
+            )
 
     def test_login_form_success(self):
         self.browser.get(self.live_server_url + reverse('login'))
         self.browser.find_element('name', 'username').send_keys('testuser')
         self.browser.find_element('name', 'password').send_keys('password')
         self.browser.find_element('name', 'submit').click()
-        self.assertEqual(self.browser.find_element(By.CLASS_NAME, 'current-user').text, 'u/testuser')
+        self.assertEqual(
+            self.browser.find_element(By.CLASS_NAME, 'current-user').text, 
+            'u/testuser'
+            )
         

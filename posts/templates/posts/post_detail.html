@@ -8,8 +8,8 @@
     <input type="hidden" name="vote" value="up">
     <input class="upvote" type="submit" value="▲">
 </form>
+<font size='5'>{{ post.vote_total }}</font>
 <h1>
-    <font size='5'>{{ post.vote_total }}</font>
     <font size='5'>{{ post.post_title }}</font>
 </h1>
 <form action={% url 'post_vote' post.subreddit.url post.url %} method="post">
