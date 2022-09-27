@@ -2,8 +2,9 @@
 
 {% block content %}
 <a href={% url 'subreddit' subreddit %}>back to r/{{ subreddit }}</a>
-<h1>Submit a post to r/{{ subreddit }}:</h1>    
-<form class="post-create-form" action={% url 'post_create' subreddit %} method="post">
+<h1>Submit a post to r/{{ subreddit }}:</h1>  
+
+<form class="post-create-form" action={% url 'post_create' subreddit %} method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form }}
     <input type="submit" name="submit" value="Submit">

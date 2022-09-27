@@ -32,6 +32,7 @@ ALLOWED_HOSTS = ['192.168.1.118', '127.0.0.1', 'localhost']
 # Application definition
 
 INSTALLED_APPS = [
+    'storages',
     'secretballot',
     'accounts.apps.AccountsConfig',
     'posts.apps.PostsConfig',
@@ -65,6 +66,7 @@ TEMPLATES = [
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
+                'django.template.context_processors.media',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
@@ -159,3 +161,7 @@ SECRETBALLOT_FOR_MODELS = {
     'posts.post': {},
     'posts.comment': {},
 }
+
+MEDIA_URL = '/media/'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

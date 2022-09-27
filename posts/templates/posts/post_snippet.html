@@ -13,15 +13,16 @@
         </form>
     </div>
     <div class="postdetails">
-        <div class="postinfo">
-            {{ p.when }} by {{ p.created_by }} | {{ p.comment_count }} comments
-        </div>
+        <div class="postinfo">{{ p.when }} by {{ p.created_by }} | {{ p.comment_count }} comments</div>
         <div class="postpreview">
-            <div>
-                <h2><a href={% url 'post_detail' object.url p.url %}>{{ p.post_title }}</a></h2>
-            </div>
-            <div>
-                <p> {{ p.preview }} </p>
+            <h2><a href={% url 'post_detail' object.url p.url %}>{{ p.post_title }}</a></h2>
+            <div class="preview-body">
+                {% if p.preview != '' %}
+                    <p class="preview-text"> {{ p.preview }} </p>
+                {% endif %}
+                {% if p.post_image.url != None %}
+                    <img class="image-preview" src={{ p.post_image.url }}>
+                {% endif %}
             </div>
         </div>
     </div>

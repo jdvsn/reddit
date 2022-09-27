@@ -39,11 +39,14 @@
                 posted {{ p.when }} to <i><a href={% url 'subreddit' p.subreddit.url %}>r/{{ p.subreddit }}</a></i> by {{ p.created_by }} | {{ p.comment_count }} comments
             </div>
             <div class="postpreview">
-                <div>
-                    <h2><a href={% url 'post_detail' p.subreddit.url p.url %}>{{ p.post_title }}</a></h2>
-                </div>
-                <div>
-                    <p> {{ p.preview }} </p>
+                <h2><a href={% url 'post_detail' p.subreddit.url p.url %}>{{ p.post_title }}</a></h2>
+                <div class="preview-body">
+                    {% if p.preview != None %}
+                        <p> {{ p.preview }} </p>
+                    {% endif %}
+                    {% if p.post_image.url != None %}
+                        <img class="image-preview" src={{ p.post_image.url }}>
+                    {% endif %}
                 </div>
             </div>
         </div>

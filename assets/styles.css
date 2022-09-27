@@ -121,10 +121,9 @@ div.submit{
 
 .posts{
      display: grid;
-     justify-self: end;
      padding: 10px 10px 10px 10px;
      grid-gap: 20px;
-     max-width: 1150px;
+     max-width: 800px;
      margin: auto
 }
 
@@ -139,8 +138,8 @@ div.submit{
 .post .votes{
      display: grid;
      justify-self: center;
-     grid-template-rows: 1fr 1fr 1fr;
-     padding: 10px 10px 10px 10px;
+     grid-template-rows: 23px 20px 20px;
+     padding: 10px;
 }
 
 .post .votes .score{
@@ -158,10 +157,47 @@ div.submit{
 }
 
 .post .postdetails .postpreview{
+    display: grid;
     background: rgb(88,88,88);
     padding: 5px
 }
 
 h2{
     margin:5px
+}
+
+img.image-preview{
+    max-width: 700;
+    max-height: 500;
+    padding: 0 0 10px 0;
+}
+
+img.image-detail{
+    max-width: 1200;
+    max-height: 800;
+}
+
+.preview-body{
+    margin: auto
+}
+
+.post-detail{
+    display: grid;
+    grid-gap: 2px;
+    max-width: 1150px;
+    margin: auto;
+    background: rgb(150,150,150);
+}
+
+.the-post{
+    background: rgb(88,88,88);
+    padding: 0 0 20 0;
+}
+
+.the-post h2{
+    font-size: 2.6em;
+}
+
+.comments{
+    background: rgb(88,88,88);
 }

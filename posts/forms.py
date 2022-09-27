@@ -19,10 +19,11 @@ class SubredditForm(ModelForm):
 class PostForm(ModelForm):
     class Meta:
         model = Post
-        fields = ['subreddit', 'post_title', 'post_body']
+        fields = ['subreddit', 'post_title', 'post_body', 'post_image']
         labels = {
             'post_title': _(''),
-            'post_body': _('')
+            'post_body': _(''),
+            'post_image': _(''),
         }
         widgets = {
             'post_title': Textarea(attrs={
