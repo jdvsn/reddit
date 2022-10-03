@@ -11,12 +11,6 @@ class Subreddit(models.Model):
     subreddit_name = models.CharField(max_length=20, unique=True)
     url = models.SlugField()
 
-    def sorted_new(self):
-        return self.posts.all().order_by('-created_at')
-
-    def sorted_top(self):
-        return self.posts.all().order_by('-score')
-
     def save(self, *args, **kwargs):
         self.url = slugify(self.subreddit_name)
         super(Subreddit, self).save(*args, **kwargs)
@@ -30,7 +24,7 @@ class Post(models.Model):
     created_by = models.ForeignKey(User, related_name='posts', on_delete=models.CASCADE)
     subreddit = models.ForeignKey(Subreddit, related_name='posts', on_delete=models.CASCADE)
     post_title = models.CharField(max_length=50)
-    post_image = models.ImageField(blank=True, upload_to='posts/', null=True)
+    post_image = models.ImageField(blank=True, upload_to='posts', null=True)
     post_body = models.TextField(max_length=500, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     score = models.IntegerField(default=0)
@@ -47,8 +41,7 @@ class Post(models.Model):
     def preview(self):
         if len(self.post_body) > 200:
             return self.post_body[:197] + '...'
-        else:
-            return self.post_body
+        return self.post_body
 
     def save(self, *args, **kwargs):
         self.url = slugify(self.post_title)

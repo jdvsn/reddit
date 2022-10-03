@@ -2,23 +2,23 @@
 
 {% block content %}
 <header class="subreddit">
-    <h1>r/{{ object.subreddit_name }}</h1>
+    <h1>r/{{ subreddit }}</h1>
 </header>
 <div class="posts">
     <header class="sort">
         <div class="sort">
             <div>
-                <a href={% url 'subreddit_top' object.url %}>top</a>
+                <a href={% url 'subreddit_top' subreddit.url %}>top</a>
             </div>
             <div>
-                <a href={% url 'subreddit_new' object.url %}>new</a>
+                <a href={% url 'subreddit_new' subreddit.url %}>new</a>
             </div>
         </div>
         <div class="submit">
-            <a href={% url 'post_create' object.url %}> Submit a post</a>
+            <a href={% url 'post_create' subreddit.url %}>submit</a>
         </div>
     </header>
-   {% block filter %}
+   {% block posts %}
    {% endblock %}
 </div>
 

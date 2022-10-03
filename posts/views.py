@@ -4,11 +4,13 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.utils.text import slugify
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 
 from .models import Subreddit, Post, Comment
 from .forms import SubredditForm, PostForm, CommentForm
 
 class HomeView(generic.ListView):
+    paginate_by = 5
     model = Post
     template_name = 'posts/home.html'
 
@@ -24,17 +26,23 @@ class SubredditIndexView(generic.ListView):
     model = Subreddit
     template_name = 'posts/subreddit_index.html'
 
-class SubredditView(generic.DetailView):
-    model = Subreddit
-    template_name = 'posts/subreddit_view.html'
-    slug_field = 'url'
-    slug_url_kwarg = 'url'
+def subreddit_view(request, subreddit_url):
+    template = 'posts/subreddit_view.html'
+    subreddit = get_object_or_404(Subreddit, url=subreddit_url)
+    posts = subreddit.posts.all()
+    return render(request, template, {'subreddit': subreddit, 'posts': posts})
 
-class SubredditNewView(SubredditView):
-    template_name='posts/subreddit_new.html'
+def subreddit_new_view(request, subreddit_url):
+    template = 'posts/subreddit_view.html'
+    subreddit = get_object_or_404(Subreddit, url=subreddit_url)
+    posts = subreddit.posts.all().order_by('-created_at')
+    return render(request, template, {'subreddit': subreddit, 'posts': posts})
 
-class SubredditTopView(SubredditView):
-    template_name='posts/subreddit_top.html'
+def subreddit_top_view(request, subreddit_url):
+    template = 'posts/subreddit_view.html'
+    subreddit = get_object_or_404(Subreddit, url=subreddit_url)
+    posts = subreddit.posts.all().order_by('-score')
+    return render(request, template, {'subreddit': subreddit, 'posts': posts})
 
 @login_required(login_url='/login/')
 def subreddit_create(request):
@@ -52,6 +60,7 @@ def subreddit_create(request):
 
 @login_required(login_url='/login/')
 def post_create(request, subreddit_url):
+    subreddit = get_object_or_404(Subreddit, url=subreddit_url)
     if request.method == 'POST':
         form = PostForm(request.POST, request.FILES)
         if form.is_valid():
@@ -64,7 +73,7 @@ def post_create(request, subreddit_url):
         form = PostForm()
     return render(request, 'posts/post_create.html', {
         'form': form,
-        'subreddit': subreddit_url
+        'subreddit': subreddit
         })
 
 def post_detail(request, post_url, subreddit_url):
@@ -114,8 +123,7 @@ def post_vote(request, post_url, subreddit_url):
     post.save()
     if request.META.get('HTTP_REFERER') != None:
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    else:
-        return HttpResponseRedirect('')
+    return HttpResponseRedirect('')
 
 def comment_vote(request, post_url, subreddit_url, comment_id):
     comment = get_object_or_404(Comment, id=comment_id)
@@ -131,5 +139,4 @@ def comment_vote(request, post_url, subreddit_url, comment_id):
     comment.save()
     if request.META.get('HTTP_REFERER') != None:
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    else:
-        return HttpResponseRedirect('')
+    return HttpResponseRedirect('')

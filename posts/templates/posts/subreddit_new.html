@@ -1,7 +1,0 @@
-{% extends 'posts/subreddit_base.html' %}
-
-{% block filter %}
-{% for p in object.sorted_new %}
-    {% include "posts/post_snippet.html" with p=p %}
-{% endfor %}
-{% endblock %}
