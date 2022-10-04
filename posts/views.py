@@ -9,40 +9,34 @@ from django.core.paginator import Paginator
 from .models import Subreddit, Post, Comment
 from .forms import SubredditForm, PostForm, CommentForm
 
-class HomeView(generic.ListView):
-    paginate_by = 5
-    model = Post
-    template_name = 'posts/home.html'
-
-class HomeNewView(HomeView):
-    def get_queryset(self):
-        return Post.objects.order_by('-created_at')
-
-class HomeTopView(HomeView):
-    def get_queryset(self):
-        return Post.objects.order_by('-score')
-
 class SubredditIndexView(generic.ListView):
     model = Subreddit
     template_name = 'posts/subreddit_index.html'
 
-def subreddit_view(request, subreddit_url):
+def home_view(request, filter):
+    template = 'posts/home.html'
+    posts = Post.objects.all()
+    if filter == 'new':
+        posts = posts.order_by('-created_at')
+    elif filter == 'top':
+        posts = posts.order_by('-score')
+    paginator = Paginator(posts, 5)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request, template, {'page_obj': page_obj})
+
+def subreddit_view(request, subreddit_url, filter):
     template = 'posts/subreddit_view.html'
     subreddit = get_object_or_404(Subreddit, url=subreddit_url)
     posts = subreddit.posts.all()
-    return render(request, template, {'subreddit': subreddit, 'posts': posts})
-
-def subreddit_new_view(request, subreddit_url):
-    template = 'posts/subreddit_view.html'
-    subreddit = get_object_or_404(Subreddit, url=subreddit_url)
-    posts = subreddit.posts.all().order_by('-created_at')
-    return render(request, template, {'subreddit': subreddit, 'posts': posts})
-
-def subreddit_top_view(request, subreddit_url):
-    template = 'posts/subreddit_view.html'
-    subreddit = get_object_or_404(Subreddit, url=subreddit_url)
-    posts = subreddit.posts.all().order_by('-score')
-    return render(request, template, {'subreddit': subreddit, 'posts': posts})
+    if filter == 'new':
+        posts = posts.order_by('-created_at')
+    elif filter == 'top':
+        posts = posts.order_by('-score')
+    paginator = Paginator(posts, 5)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request, template, {'subreddit': subreddit, 'page_obj': page_obj})
 
 @login_required(login_url='/login/')
 def subreddit_create(request):

@@ -19,16 +19,16 @@
             submit
         </div>
     </header>
-    {% for p in page_obj %}
+    {% for post in page_obj %}
     <div class="post">
         <div class="votes">
-            <form action={% url 'post_vote' p.subreddit.url p.url %} method="post">
+            <form action={% url 'post_vote' post.subreddit.url post.url %} method="post">
                 {% csrf_token %}
                 <input type="hidden" name="vote" value="up">
                 <input class="upvote" type="submit" value="▲">
             </form>
-            <div class="score">{{ p.vote_total }}</div>
-            <form action={% url 'post_vote' p.subreddit.url p.url %} method="post">
+            <div class="score">{{ post.vote_total }}</div>
+            <form action={% url 'post_vote' post.subreddit.url post.url %} method="post">
                 {% csrf_token %}
                 <input type="hidden" name="vote" value="down">
                 <input class="downvote" type="submit" value="▼">
@@ -36,16 +36,16 @@
         </div>
         <div class="postdetails">
             <div class="postinfo">
-                posted {{ p.when }} to <i><a href={% url 'subreddit' p.subreddit.url %}>r/{{ p.subreddit }}</a></i> by {{ p.created_by }} | {{ p.comment_count }} comments
+                posted {{ post.when }} to <i><a href={% url 'subreddit' post.subreddit.url %}>r/{{ post.subreddit }}</a></i> by {{ post.created_by }} | {{ post.comment_count }} comments
             </div>
             <div class="postpreview">
-                <h2><a href={% url 'post_detail' p.subreddit.url p.url %}>{{ p.post_title }}</a></h2>
+                <h2><a href={% url 'post_detail' post.subreddit.url post.url %}>{{ post.post_title }}</a></h2>
                 <div class="preview-body">
-                    {% if p.preview != None %}
-                        <p> {{ p.preview }} </p>
+                    {% if post.preview != None %}
+                        <p> {{ post.preview }} </p>
                     {% endif %}
-                    {% if p.post_image.url != None %}
-                        <img class="image-preview" src={{ p.post_image.url }}>
+                    {% if post.post_image.url != None %}
+                        <img class="image-preview" src={{ post.post_image.url }}>
                     {% endif %}
                 </div>
             </div>
@@ -58,11 +58,11 @@
                 <a href="?page=1">&laquo; first</a>
                 <a href="?page={{ page_obj.previous_page_number }}">previous</a>
             {% endif %}
-    
+            {% if page_obj.paginator.num_pages > 1 %}
             <span class="current">
                 Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
             </span>
-    
+            {% endif %}
             {% if page_obj.has_next %}
                 <a href="?page={{ page_obj.next_page_number }}">next</a>
                 <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
