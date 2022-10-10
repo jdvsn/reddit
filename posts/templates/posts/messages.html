@@ -1,0 +1,18 @@
+{% extends 'posts/base.html' %}
+
+{% block content %}
+<h2>sent messages</h2>
+<ul>
+    {% for message in sent.all %}
+       <li>message to {{ message.sent_to }} {{ message.when }}: {{ message.message_text }}</li>
+    {% endfor %}
+</ul>
+
+<h2>received messages</h2>
+<ul>
+    {% for message in received.all %}
+      <li>message from {{ message.sent_by }} {{ message.when }}: {{ message.message_text }}</li>
+    {% endfor %}
+</ul>
+
+{% endblock %}

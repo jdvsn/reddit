@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Subreddit, Post, Comment
+from .models import Subreddit, Post, Comment, Message
 
 class SubredditAdmin(admin.ModelAdmin):
     fields = ['subreddit_name']
@@ -11,8 +11,12 @@ class PostAdmin(admin.ModelAdmin):
 admin.site.register(Post, PostAdmin)
 
 class CommentAdmin(admin.ModelAdmin):
-    fields =['post', 'comment_text']
+    fields = ['post', 'comment_text']
 admin.site.register(Comment, CommentAdmin)
+
+class MessageAdmin(admin.ModelAdmin):
+    fields = ['sent_by', 'sent_to', 'message_text']
+admin.site.register(Message, MessageAdmin)
 
 # class CommentReplyAdmin(admin.ModelAdmin):
 #     fields =['comment', 'reply_text']

@@ -1,8 +1,9 @@
 from django.db import models
 from django.utils.text import slugify
 from django.contrib.auth.models import User
+from django.utils.crypto import get_random_string
 from datetime import datetime, timezone
-import timeago
+import timeago 
 
 class Subreddit(models.Model):
     class Meta:
@@ -21,6 +22,7 @@ class Subreddit(models.Model):
 class Post(models.Model):
     class Meta:
         ordering = ['-created_at']
+    id = models.AutoField(primary_key=True)
     created_by = models.ForeignKey(User, related_name='posts', on_delete=models.CASCADE)
     subreddit = models.ForeignKey(Subreddit, related_name='posts', on_delete=models.CASCADE)
     post_title = models.CharField(max_length=50)
@@ -28,8 +30,11 @@ class Post(models.Model):
     post_body = models.TextField(max_length=500, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     score = models.IntegerField(default=0)
-    url = models.SlugField()
+    url = models.SlugField(max_length=55)
     
+    def type(self):
+        return 'post'
+
     def when(self):
         now = datetime.now(timezone.utc)
         date = self.created_at
@@ -44,20 +49,25 @@ class Post(models.Model):
         return self.post_body
 
     def save(self, *args, **kwargs):
-        self.url = slugify(self.post_title)
+        self.url = slugify(get_random_string(4, '123456789') + '-' + self.post_title)
         super(Post, self).save(*args, **kwargs)
 
     def __str__(self):
-        return self.post_title
+        return 'Post with id %s by %s to %s' % (self.id, self.created_by, self.subreddit)
     
 class Comment(models.Model):
     class Meta:
         ordering = ['-created_at']
+    id = models.AutoField(primary_key=True)
     created_by = models.ForeignKey(User, related_name='comments', on_delete=models.CASCADE)
     post = models.ForeignKey(Post, related_name='comments', on_delete=models.CASCADE)
     comment_text = models.TextField(max_length=500)
     created_at = models.DateTimeField(auto_now_add=True)
     reply = models.ForeignKey('Comment', null=True, related_name='replies', on_delete=models.CASCADE)
+    score = models.IntegerField(default=0)
+        
+    def type(self):
+        return 'comment'
 
     def when(self):
         now = datetime.now(timezone.utc)
@@ -65,4 +75,21 @@ class Comment(models.Model):
         return timeago.format(date, now)
 
     def __str__(self):
-        return self.comment_text  
+        return 'Comment with id %s by %s on post with id %s' % (self.id, self.created_by, self.post.id)  
+
+class Message(models.Model):
+    class Meta:
+        ordering = ['-created_at']
+    id = models.AutoField(primary_key=True)
+    sent_by = models.ForeignKey(User, related_name='sent_messages', on_delete=models.CASCADE)
+    sent_to = models.ForeignKey(User, related_name='received_messages', on_delete=models.CASCADE)
+    message_text = models.TextField(max_length=500)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    def when(self):
+        now = datetime.now(timezone.utc)
+        date = self.created_at
+        return timeago.format(date, now)
+
+    def __str__(self):
+        return 'Message with id %s sent from %s to %s' % (self.id, self.sent_by, self.sent_to)

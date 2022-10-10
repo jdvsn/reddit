@@ -17,7 +17,7 @@
             <div class="header accounts">
                 <ul>
                     {% if user.is_authenticated %}
-                        <li class="current-user">u/{{ user }}</li>
+                        <li class="current-user"><a href={% url 'profile' user %}>u/{{ user }}</a></li>
                         <li>
                             <form action={% url 'logout' %}>
                                 {% csrf_token %}

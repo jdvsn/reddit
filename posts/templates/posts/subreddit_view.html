@@ -6,18 +6,18 @@
     <div class="votes">
         <form action={% url 'post_vote' post.subreddit.url post.url %} method="post">
             {% csrf_token %}
-            <input type="hidden" name="vote" value="up">
+            <input type="hidden" name="vote" value="+1">
             <input class="upvote" type="submit" value="▲">
         </form>
         <div class="score">{{ post.vote_total }}</div>
         <form action={% url 'post_vote' post.subreddit.url post.url %} method="post">
             {% csrf_token %}
-            <input type="hidden" name="vote" value="down">
+            <input type="hidden" name="vote" value="-1">
             <input class="downvote" type="submit" value="▼">
         </form>
     </div>
     <div class="postdetails">
-        <div class="postinfo">{{ post.when }} by {{ post.created_by }} | {{ post.comment_count }} comments</div>
+        <div class="postinfo">{{ post.when }} by <a href={% url 'profile' post.created_by %}>{{ post.created_by }}</a> | {{ post.comment_count }} comments</div>
         <div class="postpreview">
             <h2><a href={% url 'post_detail' post.subreddit.url post.url %}>{{ post.post_title }}</a></h2>
             <div class="preview-body">

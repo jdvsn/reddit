@@ -24,19 +24,19 @@
         <div class="votes">
             <form action={% url 'post_vote' post.subreddit.url post.url %} method="post">
                 {% csrf_token %}
-                <input type="hidden" name="vote" value="up">
+                <input type="hidden" name="vote" value="+1">
                 <input class="upvote" type="submit" value="▲">
             </form>
             <div class="score">{{ post.vote_total }}</div>
             <form action={% url 'post_vote' post.subreddit.url post.url %} method="post">
                 {% csrf_token %}
-                <input type="hidden" name="vote" value="down">
+                <input type="hidden" name="vote" value="-1">
                 <input class="downvote" type="submit" value="▼">
             </form>
         </div>
         <div class="postdetails">
             <div class="postinfo">
-                posted {{ post.when }} to <i><a href={% url 'subreddit' post.subreddit.url %}>r/{{ post.subreddit }}</a></i> by {{ post.created_by }} | {{ post.comment_count }} comments
+                posted {{ post.when }} to <i><a href={% url 'subreddit' post.subreddit.url %}>r/{{ post.subreddit }}</a></i> by <a href={% url 'profile' post.created_by %}>{{ post.created_by }}</a> | {{ post.comment_count }} comments
             </div>
             <div class="postpreview">
                 <h2><a href={% url 'post_detail' post.subreddit.url post.url %}>{{ post.post_title }}</a></h2>
@@ -54,8 +54,10 @@
     {% endfor %}
     <div class="pagination">
         <span class="step-links">
-            {% if page_obj.has_previous %}
+            {% if page_obj.paginator.num_pages > 2 %}
                 <a href="?page=1">&laquo; first</a>
+            {% endif %}
+            {% if page_obj.has_previous %}
                 <a href="?page={{ page_obj.previous_page_number }}">previous</a>
             {% endif %}
             {% if page_obj.paginator.num_pages > 1 %}
@@ -65,6 +67,8 @@
             {% endif %}
             {% if page_obj.has_next %}
                 <a href="?page={{ page_obj.next_page_number }}">next</a>
+            {% endif %}
+            {% if page_obj.paginator.num_pages > 2 %}
                 <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
             {% endif %}
         </span>

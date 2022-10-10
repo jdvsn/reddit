@@ -100,6 +100,14 @@ header.subreddit{
      max-width: 1150px
 }
 
+header.profile{
+    background: rgb(74 74 74);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin: 10px auto;
+    max-width: 1150px
+}
+
 header.sort{
     background: rgb(75 75 75);
     display: grid;
@@ -127,6 +135,39 @@ div.submit{
      margin: auto
 }
 
+.profile-content{
+    display: grid;
+    padding: 10px 10px 10px 10px;
+    grid-gap: 20px;
+    max-width: 800px;
+    margin: auto
+}
+
+.profile-comment{
+    display: grid;
+    grid-template-columns: 40px 20fr;
+    background: rgb(75 75 75);
+    position: relative; 
+    grid-gap: 0px;
+}
+
+.profile-comment-details{
+    display: grid;
+    grid-template-rows: 20px;
+    grid-gap: 0px;
+    padding: 10px 20px 10px 0px;
+}
+
+.profile-comment-info{
+    font-size: 0.8em;
+}
+
+.profile-comment-text{
+    display: grid;
+    background: rgb(88,88,88);
+    padding: 5px
+}
+
 .post{
      display: grid;
      grid-template-columns: 40px 20fr;
@@ -152,6 +193,7 @@ div.submit{
       grid-gap: 0px;
       padding: 10px 20px 10px 0px;
 }
+
 .post .postdetails .postinfo{
       font-size: 0.8em;
 }

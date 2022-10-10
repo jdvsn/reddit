@@ -1,0 +1,91 @@
+{% extends 'posts/base.html' %}
+
+{% block content %}
+<header class="profile">
+    <h1>u/{{ user }}</h1>
+    <a href={% url 'profile' user %}>all</a>
+    <a href={% url 'profile_posts' user %}>posts</a>
+    <a href={% url 'profile_comments' user %}>comments</a>
+</header>
+<header class="sort">
+    <div class="sort">
+        {% if show_posts and show_comments %}
+        <div>
+            <a href={% url 'profile_top' user %}>top</a>
+        </div>
+        <div>
+            <a href={% url 'profile_new' user %}>new</a>
+        </div>
+        {% endif %}
+        {% if show_posts and not show_comments %}
+        <div>
+            <a href={% url 'profile_posts_top' user %}>top</a>
+        </div>
+        <div>
+            <a href={% url 'profile_posts_new' user %}>new</a>
+        </div>
+        {% endif %}
+        {% if show_comments and not show_posts %}
+        <div>
+            <a href={% url 'profile_comments_top' user %}>top</a>
+        </div>
+        <div>
+            <a href={% url 'profile_comments_new' user %}>new</a>
+        </div>
+        {% endif %}
+    </div>
+</header>
+<div class="profile-content">
+    {% if not result %}
+        <div>{{ user }} hasn't submitted anything.</div>
+    {% endif %}
+    {% for x in result %}
+        {% if x.type == 'post' %}
+            <div class='post'>
+                <div class="votes">
+                    <form action={% url 'post_vote' x.subreddit.url x.url %} method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="vote" value="up">
+                        <input class="upvote" type="submit" value="▲">
+                    </form>
+                    <div class="score">{{ x.vote_total }}</div>
+                    <form action={% url 'post_vote' x.subreddit.url x.url %} method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="vote" value="down">
+                        <input class="downvote" type="submit" value="▼">
+                    </form>
+                </div>
+                <div class="postdetails">
+                    <div class="postinfo">
+                        {{ x.type }} by {{ user }} {{ x.when }} to <i><a href={% url 'subreddit' x.subreddit.url %}>r/{{ x.subreddit }}</a></i> | {{ x.comment_count }} comments
+                    </div>
+                    <div class="postpreview">
+                        <h2><a href={% url 'post_detail' x.subreddit.url x.url %}>{{ x.post_title }}</a></h2>
+                        <div class="preview-body">
+                            {% if x.preview != '' %}
+                                <p class="preview-text"> {{ x.preview }} </p>
+                            {% endif %}
+                            {% if x.post_image.url != None %}
+                                <img class="image-preview" src={{ x.post_image.url }}>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+        {% if x.type == 'comment' %}
+            <div class="profile-comment">
+                <div>{{ x.score }}</div>
+                <div class="profile-comment-details">
+                    <div class="profile-comment-info">
+                        {{ x.type }} by {{ user }} {{ x.when }} on <a href={% url 'post_detail' x.post.subreddit.url x.post.url %}>{{ x.post.post_title }}</a> in <i><a href={% url 'subreddit' x.post.subreddit.url %}>r/{{ x.post.subreddit }}</a></i>
+                    </div>
+                    <div class="profile-comment-text">
+                        {{ x.comment_text }}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    {% endfor %}
+</div>
+{% endblock %}
