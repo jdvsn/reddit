@@ -1,0 +1,18 @@
+{% extends 'posts/base.html' %}
+
+{% block content %}
+<header><h1>notifications</h1></header>
+<div class="notifications">
+    {% for x in post_replies %}
+        <div class="notification">
+        {% if x.parent %}
+            <p>reply from {{ x.created_by }} {{ x.when }} to your <a href={% url 'comment_view' x.post.subreddit.url x.post.url x.parent.id %}>comment</a></p>
+            <p><a href={% url 'comment_view' x.post.subreddit.url x.post.url x.id %}>{{ x.preview }}</a></p>
+        {% else %}
+            <p>comment from {{ x.created_by }} {{ x.when }} on your <a href={% url 'post_detail' x.post.subreddit.url x.post.url %}>post</a></p>
+            <p><a href={% url 'comment_view' x.post.subreddit.url x.post.url x.id %}>{{ x.preview }}</a></p>
+        {% endif %}
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

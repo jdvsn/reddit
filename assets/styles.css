@@ -122,6 +122,10 @@ div.sort{
     max-height: 30px
 }
 
+div.profile-sort{
+    justify-self: end;
+}
+
 div.submit{
      justify-self: end;
      padding: 0px 20px 0px 0px;
@@ -242,4 +246,30 @@ img.image-detail{
 
 .comments{
     background: rgb(88,88,88);
+}
+
+.messages{
+    display: grid;
+    padding: 10px 10px 10px 10px;
+    grid-gap: 20px;
+    max-width: 800px;
+    margin: auto
+}
+
+.message{
+    display: grid;
+    background: rgb(75 75 75);
+    position: relative; 
+    grid-gap: 3px;
+    padding: 5px;
+}
+
+.message-info{
+    font-size: 0.8em;
+}
+
+.message-body{
+    display: grid;
+    background: rgb(88,88,88);
+    padding: 5px
 }

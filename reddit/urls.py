@@ -32,9 +32,12 @@ urlpatterns = [
     path('r/<slug:subreddit_url>/comments/<slug:post_url>/', views.post_detail, name='post_detail'),
     path('r/<slug:subreddit_url>/comments/<slug:post_url>/vote/', views.post_vote, name='post_vote'),
     path('r/<slug:subreddit_url>/comments/<slug:post_url>/vote/<int:comment_id>/', views.comment_vote, name='comment_vote'),
-    path('messages/', views.messages_view, name='messages'),
-    path('messages/create/', views.message_create, name='message_create'),
+    path('r/<slug:subreddit_url>/comments/<slug:post_url>/comment/<int:comment_id>/', views.comment_view, name='comment_view'),
+    path('messages/', views.messages_view, name='messages', kwargs={'folder': 'received'}),
+    path('messages/sent/', views.messages_view, name='messages_sent', kwargs={'folder': 'sent'}),
+    path('messages/create/', views.messages_create, name='messages_create'),
+    path('notifications/', views.notifications_view, name='notifications')
 ]
 
 urlpatterns += staticfiles_urlpatterns()
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+#urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

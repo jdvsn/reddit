@@ -3,55 +3,57 @@
 {% block content %}
 <header class="profile">
     <h1>u/{{ user }}</h1>
-    <a href={% url 'profile' user %}>all</a>
-    <a href={% url 'profile_posts' user %}>posts</a>
-    <a href={% url 'profile_comments' user %}>comments</a>
-</header>
-<header class="sort">
-    <div class="sort">
-        {% if show_posts and show_comments %}
-        <div>
-            <a href={% url 'profile_top' user %}>top</a>
-        </div>
-        <div>
-            <a href={% url 'profile_new' user %}>new</a>
-        </div>
-        {% endif %}
-        {% if show_posts and not show_comments %}
-        <div>
-            <a href={% url 'profile_posts_top' user %}>top</a>
-        </div>
-        <div>
-            <a href={% url 'profile_posts_new' user %}>new</a>
-        </div>
-        {% endif %}
-        {% if show_comments and not show_posts %}
-        <div>
-            <a href={% url 'profile_comments_top' user %}>top</a>
-        </div>
-        <div>
-            <a href={% url 'profile_comments_new' user %}>new</a>
-        </div>
-        {% endif %}
-    </div>
 </header>
 <div class="profile-content">
-    {% if not result %}
+    <header class="sort">
+        <div class="sort">
+            {% if show_posts and show_comments %}
+            <div>
+                <a href={% url 'profile_top' user %}>top</a>
+            </div>
+            <div>
+                <a href={% url 'profile_new' user %}>new</a>
+            </div>
+            {% endif %}
+            {% if show_posts and not show_comments %}
+            <div>
+                <a href={% url 'profile_posts_top' user %}>top</a>
+            </div>
+            <div>
+                <a href={% url 'profile_posts_new' user %}>new</a>
+            </div>
+            {% endif %}
+            {% if show_comments and not show_posts %}
+            <div>
+                <a href={% url 'profile_comments_top' user %}>top</a>
+            </div>
+            <div>
+                <a href={% url 'profile_comments_new' user %}>new</a>
+            </div>
+            {% endif %}
+        </div>
+        <div class="profile-sort">
+            <a href={% url 'profile' user %}>all</a>
+            <a href={% url 'profile_posts' user %}>posts</a>
+            <a href={% url 'profile_comments' user %}>comments</a>
+        </div>
+    </header>
+    {% if not page_obj %}
         <div>{{ user }} hasn't submitted anything.</div>
     {% endif %}
-    {% for x in result %}
+    {% for x in page_obj %}
         {% if x.type == 'post' %}
             <div class='post'>
                 <div class="votes">
                     <form action={% url 'post_vote' x.subreddit.url x.url %} method="post">
                         {% csrf_token %}
-                        <input type="hidden" name="vote" value="up">
+                        <input type="hidden" name="vote" value="+1">
                         <input class="upvote" type="submit" value="▲">
                     </form>
                     <div class="score">{{ x.vote_total }}</div>
                     <form action={% url 'post_vote' x.subreddit.url x.url %} method="post">
                         {% csrf_token %}
-                        <input type="hidden" name="vote" value="down">
+                        <input type="hidden" name="vote" value="-1">
                         <input class="downvote" type="submit" value="▼">
                     </form>
                 </div>
@@ -87,5 +89,22 @@
             </div>
         {% endif %}
     {% endfor %}
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1">&laquo; first</a>
+                <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+            {% endif %}
+            {% if page_obj.paginator.num_pages > 1 %}
+            <span class="current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+            {% endif %}
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">next</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
 </div>
 {% endblock %}

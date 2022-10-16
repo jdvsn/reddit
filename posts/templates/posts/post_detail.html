@@ -43,7 +43,7 @@
 
         <ul class="comment-list">
             {% for c in post.comments.all %}
-            {% if c.reply == None %}
+            {% if c.parent == None %}
             <li class="comment">
                 <p>{{ c.comment_text }}</p>
                 <div class="votes">
@@ -63,13 +63,13 @@
                     <form action="" method="post">
                         {% csrf_token %}
                         {{ comment_form.as_p }}
-                        <input type="hidden" name="reply_id" value="{{ c.id }}">
+                        <input type="hidden" name="parent_id" value="{{ c.id }}">
                         <button class="btn btn-primary mt-md-1" type="submit" value="Reply">Reply</button>
                     </form>
                 </details>
                 <ul class="comment-replies">
                     {% for cr in c.replies.all %}  
-                    <li class="comment=reply">
+                    <li class="comment-reply">
                         <p> {{ cr.comment_text }}</p>
                         <div class="votes">
                             <form action={% url 'comment_vote' post.subreddit.url post.url cr.id %} method="post">

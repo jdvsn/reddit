@@ -1,18 +1,25 @@
-{% extends 'posts/base.html' %}
+{% extends 'posts/messages_base.html' %}
 
-{% block content %}
-<h2>sent messages</h2>
-<ul>
-    {% for message in sent.all %}
-       <li>message to {{ message.sent_to }} {{ message.when }}: {{ message.message_text }}</li>
+{% block messages %}
+<h2>{{ folder }}</h2>
+{% if page_obj %}
+    {% if folder == 'sent' %}
+    {% for message in page_obj %}
+    <div class="message">
+        <div class="message-info">sent to {{ message.sent_to }} {{ message.when }}</div>
+        <div class="message-body">{{ message.message_text }}</div>
+    </div>
     {% endfor %}
-</ul>
-
-<h2>received messages</h2>
-<ul>
-    {% for message in received.all %}
-      <li>message from {{ message.sent_by }} {{ message.when }}: {{ message.message_text }}</li>
+    {% endif %}
+    {% if folder == 'received' %}
+    {% for message in page_obj %}
+    <div class="message">
+        <div class="message-info">sent from {{ message.sent_by }} {{ message.when }}</div>
+        <div class="message-body">{{ message.message_text }}</div>
+    </div>
     {% endfor %}
-</ul>
-
+    {% endif %}
+{% else %}
+    there is nothing here
+{% endif %}
 {% endblock %}

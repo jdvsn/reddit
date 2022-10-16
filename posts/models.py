@@ -49,11 +49,11 @@ class Post(models.Model):
         return self.post_body
 
     def save(self, *args, **kwargs):
-        self.url = slugify(get_random_string(4, '123456789') + '-' + self.post_title)
+        self.url = slugify('%s-%s' % (get_random_string(4, '123456789'), self.post_title))
         super(Post, self).save(*args, **kwargs)
 
     def __str__(self):
-        return 'Post with id %s by %s to %s' % (self.id, self.created_by, self.subreddit)
+        return 'Post with id %s by %s to %s "%s"' % (self.id, self.created_by, self.subreddit, self.post_title)
     
 class Comment(models.Model):
     class Meta:
@@ -63,7 +63,7 @@ class Comment(models.Model):
     post = models.ForeignKey(Post, related_name='comments', on_delete=models.CASCADE)
     comment_text = models.TextField(max_length=500)
     created_at = models.DateTimeField(auto_now_add=True)
-    reply = models.ForeignKey('Comment', null=True, related_name='replies', on_delete=models.CASCADE)
+    parent = models.ForeignKey('Comment', null=True, related_name='replies', on_delete=models.CASCADE)
     score = models.IntegerField(default=0)
         
     def type(self):
@@ -74,8 +74,13 @@ class Comment(models.Model):
         date = self.created_at
         return timeago.format(date, now)
 
+    def preview(self):
+        if len(self.comment_text) > 100:
+            return self.comment_text[:97] + '...'
+        return self.comment_text
+
     def __str__(self):
-        return 'Comment with id %s by %s on post with id %s' % (self.id, self.created_by, self.post.id)  
+        return 'Comment with id %s by %s on post with id %s "%s"' % (self.id, self.created_by, self.post.id, self.post.post_title)  
 
 class Message(models.Model):
     class Meta:

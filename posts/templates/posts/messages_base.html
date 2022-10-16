@@ -1,0 +1,39 @@
+{% extends 'posts/base.html' %}
+
+{% block content %}
+<header class="messages">
+    <h1>messages</h1>
+</header>
+<div class="messages">
+    <header class="sort">
+        <div>
+            <a href={% url 'messages' %}>inbox</a>
+            <a href={% url 'messages_sent' %}>sent</a>
+            <a href={% url 'messages_create' %}>create</a>
+        </div>
+    </header>
+    {% block messages %}
+    {% endblock %}
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.paginator.num_pages > 2 %}
+                <a href="?page=1">&laquo; first</a>
+            {% endif %}
+            {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+            {% endif %}
+            {% if page_obj.paginator.num_pages > 1 %}
+            <span class="current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+            {% endif %}
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">next</a>
+            {% endif %}
+            {% if page_obj.paginator.num_pages > 2 %}
+                <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+            {% endif %}
+        </span>
+      </div>
+</div>
+{% endblock %}

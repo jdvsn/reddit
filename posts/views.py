@@ -21,7 +21,7 @@ def home_view(request, filter):
     posts = Post.objects.all()
     if filter:
         posts = posts.order_by(filter)
-    paginator = Paginator(posts, 10)
+    paginator = Paginator(posts, 8)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     return render(request, 'posts/home.html', {'page_obj': page_obj})
@@ -31,7 +31,7 @@ def subreddit_view(request, subreddit_url, filter):
     posts = subreddit.posts.all()
     if filter:
         posts = posts.order_by(filter)
-    paginator = Paginator(posts, 10)
+    paginator = Paginator(posts, 8)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     return render(request, 'posts/subreddit_view.html', {'subreddit': subreddit, 'page_obj': page_obj})
@@ -76,11 +76,11 @@ def post_detail(request, post_url, subreddit_url):
                 comment.post = post
                 comment.created_by = request.user
                 try:
-                    reply_id = int(request.POST.get('reply_id'))
+                    parent = int(request.POST.get('parent_id'))
                 except:
-                    reply_id = None
-                if reply_id:
-                    comment.reply = Comment.objects.get(id=reply_id)
+                    parent = None
+                if parent:
+                    comment.parent = Comment.objects.get(id=parent)
                 comment.save()
                 return HttpResponseRedirect(reverse('post_detail', args=[subreddit_url, post_url]))
     else:
@@ -115,6 +115,15 @@ def comment_vote(request, post_url, subreddit_url, comment_id):
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     return HttpResponseRedirect('')
 
+def comment_view(request, post_url, subreddit_url, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id)
+    post = Post.objects.get(id=comment.post.id)
+    if comment.parent:
+        parent = Comment.objects.get(id=comment.parent.id)
+    else:
+        parent = None
+    return render(request, 'posts/comment_view.html', {'post': post, 'comment': comment, 'parent': parent})
+
 def profile_view(request, user, show_posts, show_comments, filter):
     user = User.objects.get(username=user)
     posts = user.posts.all()
@@ -135,17 +144,25 @@ def profile_view(request, user, show_posts, show_comments, filter):
             result = comments.order_by(filter)
         else:
             result = comments
-    return render(request, 'posts/profile.html', {'user': user, 'result' : result, 'show_posts': show_posts, 'show_comments': show_comments})
+    paginator = Paginator(result, 8)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'posts/profile.html', {'user': user, 'page_obj' : page_obj, 'show_posts': show_posts, 'show_comments': show_comments})
 
 @login_required(login_url='/login/')
-def messages_view(request):
+def messages_view(request, folder):
     user = request.user
-    sent = user.sent_messages.all()
-    received = user.received_messages.all()
-    return render(request, 'posts/messages.html', {'user': user, 'sent': sent, 'received': received})
+    if folder == 'received':
+        messages = user.received_messages.all()
+    elif folder =='sent':
+        messages = user.sent_messages.all()
+    paginator = Paginator(messages, 5)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'posts/messages.html', {'user': user,'folder': folder, 'page_obj': page_obj})
 
 @login_required(login_url='/login/')
-def message_create(request):
+def messages_create(request):
     if request.method == 'POST':
         form = MessageForm(request.POST)
         if form.is_valid():
@@ -157,3 +174,21 @@ def message_create(request):
     else: 
         form = MessageForm()
     return render(request, 'posts/message_create.html', {'form': form})
+
+@login_required(login_url='/login/')
+def notifications_view(request):
+    user = request.user
+    posts = user.posts.all()
+    comments = user.comments.all()
+    post_replies = []
+    comment_replies = []
+    for p in posts:
+        for pr in p.comments.all():
+            post_replies.append(pr)
+    post_replies = sorted(post_replies, key=attrgetter('created_at'), reverse=True)
+    for c in comments:
+        for cr in c.replies.all():
+            comment_replies.append(cr)
+    comment_replies = sorted(comment_replies, key=attrgetter('created_at'), reverse=True)
+    both = sorted(chain(list(post_replies), list(comment_replies)), key=attrgetter('created_at'), reverse=True)
+    return render(request, 'posts/notifications.html', {'user': user, 'post_replies': post_replies, 'comment_replies': comment_replies, 'both': both})

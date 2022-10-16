@@ -1,8 +1,8 @@
-{% extends 'posts/base.html' %}
+{% extends 'posts/messages_base.html' %}
 
-{% block content %}
-
-<form class="message-create-form" action={% url 'message_create'%} method="post" enctype="multipart/form-data">
+{% block messages %}
+<h2>send a new message</h2>
+<form class="message-create-form" action={% url 'messages_create'%} method="post" enctype="multipart/form-data">
     {% csrf_token %}
     <table>
     {{ form.as_table }}
