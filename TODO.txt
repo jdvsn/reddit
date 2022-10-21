@@ -1,0 +1,4 @@
+combine post and comment vote
+subreddit edit view - info, moderators
+post edit view - title, content
+comment edit view - text

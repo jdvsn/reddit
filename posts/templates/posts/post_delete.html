@@ -1,0 +1,15 @@
+{% extends 'posts/post_detail.html' %}
+
+{% block delete %}
+{% if can_delete %}
+<p>are you sure you want to delete this post?</p>
+<form action="" class="post-delete" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="delete" value="delete">
+    <button class="delete" type="submit">yes</button>
+</form>
+{% else %}
+<p>you don't have permission to delete this post</p>
+{% endif %}
+<a href={% url 'post_detail' post.subreddit.url post.url %}>back</a>
+{% endblock %}

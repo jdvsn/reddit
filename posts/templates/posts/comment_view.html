@@ -35,57 +35,47 @@
     </div>
     <div class="comments">
         <p>Viewing a single comment, to see all comments <a href={% url 'post_detail' post.subreddit.url post.url %}>click here</a></p>
-        <div class="comment">
-            {% if parent == None %}
-            <p>{{ comment.comment_text }}</p>
-            <div class="votes">
-                <form action={% url 'comment_vote' post.subreddit.url post.url comment.id %} method="post">
-                    {% csrf_token %}
-                    <input type="hidden" name="vote" value="+1">
-                    <input class="upvote" type="submit" value="▲">
-                </form>
-                <form action={% url 'comment_vote' post.subreddit.url post.url comment.id %} method="post">
-                    {% csrf_token %}
-                    <input type="hidden" name="vote" value="-1">
-                    <input class="downvote" type="submit" value="▼">
-                </form>
-            </div>
-            {{ comment.vote_total }} points | {{ comment.when }} by <a href={% url 'profile' comment.created_by %}>{{ comment.created_by }}</a>
-            {% elif parent %}
-            <details>
+        {% if parent %}
+        <details>
             <summary>view parent</summary>
-            <p>{{ parent.comment_text }}</p>
-            <div class="votes">
-                <form action={% url 'comment_vote' post.subreddit.url post.url parent.id %} method="post">
-                    {% csrf_token %}
-                    <input type="hidden" name="vote" value="+1">
-                    <input class="upvote" type="submit" value="▲">
-                </form>
-                <form action={% url 'comment_vote' post.subreddit.url post.url parent.id %} method="post">
-                    {% csrf_token %}
-                    <input type="hidden" name="vote" value="-1">
-                    <input class="downvote" type="submit" value="▼">
-                </form>
-            </div>
-            {{ parent.vote_total }} points | {{ parent.when }} by <a href={% url 'profile' parent.created_by %}>{{ parent.created_by }}</a>
-            </details>
-            <div class="comment-reply">
-                <p> {{ comment.comment_text }}</p>
+            <div class="comment">
+                <p>{{ parent.comment_text }}</p>
                 <div class="votes">
-                    <form action={% url 'comment_vote' post.subreddit.url post.url comment.id %} method="post">
+                    <form action={% url 'comment_vote' post.subreddit.url post.url parent.id %} method="post">
                         {% csrf_token %}
                         <input type="hidden" name="vote" value="+1">
                         <input class="upvote" type="submit" value="▲">
                     </form>
-                    <form action={% url 'comment_vote' post.subreddit.url post.url comment.id %} method="post">
+                    <form action={% url 'comment_vote' post.subreddit.url post.url parent.id %} method="post">
                         {% csrf_token %}
                         <input type="hidden" name="vote" value="-1">
                         <input class="downvote" type="submit" value="▼">
                     </form>
                 </div>
-                {{ comment.vote_total }} points | {{ comment.when }} by <a href={% url 'profile' comment.created_by %}>{{ comment.created_by }}</a>
+                {{ parent.vote_total }} points | {{ parent.when }} by <a href={% url 'profile' parent.created_by %}>{{ parent.created_by }}</a>
             </div>
-            {% endif %}
+        </details>
+        {% endif %}
+        {% block delete %}
+        {% endblock %}
+        <div class="comment">
+            <p> {{ comment.comment_text }}</p>
+            <div class="votes">
+                <form action={% url 'comment_vote' post.subreddit.url post.url comment.id %} method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="vote" value="+1">
+                    <input class="upvote" type="submit" value="▲">
+                </form>
+                <form action={% url 'comment_vote' post.subreddit.url post.url comment.id %} method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="vote" value="-1">
+                    <input class="downvote" type="submit" value="▼">
+                </form>
+            </div>
+            {{ comment.vote_total }} points | 
+            {{ comment.when }} 
+            by <a href={% url 'profile' comment.created_by %}>{{ comment.created_by }}</a>
+            <a href={% url 'comment_delete' post.subreddit.url post.url comment.id %}>delete</a>
         </div>
     </div>
 </div>

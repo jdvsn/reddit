@@ -8,13 +8,19 @@ from .models import Message, Subreddit, Post, Comment
 class SubredditForm(ModelForm):
     class Meta:
         model = Subreddit
-        fields = ['subreddit_name']
-        labels = {'subreddit_name': _('Create a new subreddit:')}
+        fields = ['subreddit_name', 'subreddit_info']
+        labels = {
+            'subreddit_name': _('Create a new subreddit:'),
+            'subreddit_info': _('')
+        }
         widgets = {
             'subreddit_name': TextInput(attrs={
                 'placeholder': 'Enter subreddit name',
-                })
-            }
+                }),
+            'subreddit_info': Textarea(attrs={
+                'placeholder': 'Add a short description (optional)'
+            })
+        }
         error_messages = {'subreddit_name': {'unique': 'A subreddit with this name already exists.'}}
 
 class PostForm(ModelForm):

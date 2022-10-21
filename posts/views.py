@@ -2,16 +2,14 @@ from django.views import generic
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.urls import reverse
-from django.utils.text import slugify
 from django.contrib.auth.models import User
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.core.paginator import Paginator
+from itertools import chain
+from operator import attrgetter
 
 from .models import Subreddit, Post, Comment
 from .forms import SubredditForm, PostForm, CommentForm, MessageForm
-
-from itertools import chain
-from operator import attrgetter
 
 class SubredditIndexView(generic.ListView):
     model = Subreddit
@@ -44,6 +42,7 @@ def subreddit_create(request):
             subreddit = form.save(commit=False)
             subreddit.created_by = request.user
             subreddit.save()
+            subreddit.moderators.add(request.user)
             return HttpResponseRedirect(reverse('subreddit', args=[subreddit.url]))
     else:
         form = SubredditForm()
@@ -101,6 +100,17 @@ def post_vote(request, post_url, subreddit_url):
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     return HttpResponseRedirect('')
 
+@login_required(login_url='/login/')
+def post_delete(request, post_url, subreddit_url):
+    post = get_object_or_404(Post, url=post_url)
+    can_delete = post.can_delete(request.user)
+    if request.method == 'POST':
+        delete = request.POST.get('delete')
+        if delete:
+            post.delete()
+            return HttpResponseRedirect(reverse('subreddit', args=[Subreddit.objects.get(url=subreddit_url)]))
+    return render(request, 'posts/post_delete.html', {'post': post, 'can_delete': can_delete})
+    
 def comment_vote(request, post_url, subreddit_url, comment_id):
     comment = get_object_or_404(Comment, id=comment_id)
     vote = request.POST.get("vote")
@@ -123,6 +133,18 @@ def comment_view(request, post_url, subreddit_url, comment_id):
     else:
         parent = None
     return render(request, 'posts/comment_view.html', {'post': post, 'comment': comment, 'parent': parent})
+
+@login_required(login_url='/login/')
+def comment_delete(request, post_url, subreddit_url, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id)
+    post = Post.objects.get(id=comment.post.id)
+    can_delete = comment.can_delete(request.user)
+    if request.method == 'POST':
+        delete = request.POST.get('delete')
+        if delete:
+            comment.delete()
+            return HttpResponseRedirect(reverse('post_detail', args=[subreddit_url, post_url]))
+    return render(request, 'posts/comment_delete.html', {'post': post,'comment': comment, 'can_delete': can_delete})
 
 def profile_view(request, user, show_posts, show_comments, filter):
     user = User.objects.get(username=user)

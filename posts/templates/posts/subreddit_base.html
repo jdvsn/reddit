@@ -4,22 +4,32 @@
 <header class="subreddit">
     <h1>r/{{ subreddit }}</h1>
 </header>
-<div class="posts">
-    <header class="sort">
-        <div class="sort">
-            <div>
-                <a href={% url 'subreddit_top' subreddit.url %}>top</a>
+<div class="subreddit">
+    <div class="subreddit-sidebar-left">
+    </div>
+    <div class="posts">
+        <header class="sort">
+            <div class="sort">
+                <div>
+                    <a href={% url 'subreddit_top' subreddit.url %}>top</a>
+                </div>
+                <div>
+                    <a href={% url 'subreddit_new' subreddit.url %}>new</a>
+                </div>
             </div>
-            <div>
-                <a href={% url 'subreddit_new' subreddit.url %}>new</a>
+            <div class="submit">
+                <a href={% url 'post_create' subreddit.url %}>submit</a>
             </div>
-        </div>
-        <div class="submit">
-            <a href={% url 'post_create' subreddit.url %}>submit</a>
-        </div>
-    </header>
-   {% block posts %}
-   {% endblock %}
+        </header>
+    {% block posts %}
+    {% endblock %}
+    </div>
+    <div class="subreddit-sidebar-right">
+    <p>r/{{ subreddit.subreddit_name }}</p>
+    <p>created by {{ subreddit.created_by }}</p>
+    <p>moderators {{ subreddit.moderator_list }}</p>
+    </div>
 </div>
+
 
 {% endblock %}

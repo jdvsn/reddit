@@ -80,7 +80,7 @@
                 <div>{{ x.score }}</div>
                 <div class="profile-comment-details">
                     <div class="profile-comment-info">
-                        {{ x.type }} by {{ user }} {{ x.when }} on <a href={% url 'post_detail' x.post.subreddit.url x.post.url %}>{{ x.post.post_title }}</a> in <i><a href={% url 'subreddit' x.post.subreddit.url %}>r/{{ x.post.subreddit }}</a></i>
+                        <a href={% url 'comment_view' x.post.subreddit.url x.post.url x.id %}>comment</a> by {{ user }} {{ x.when }} on <a href={% url 'post_detail' x.post.subreddit.url x.post.url %}>{{ x.post.post_title }}</a> in <i><a href={% url 'subreddit' x.post.subreddit.url %}>r/{{ x.post.subreddit }}</a></i>
                     </div>
                     <div class="profile-comment-text">
                         {{ x.comment_text }}

@@ -273,3 +273,8 @@ img.image-detail{
     background: rgb(88,88,88);
     padding: 5px
 }
+
+div.subreddit{
+    display: grid;
+    grid-template-columns: 1fr 5fr 1fr
+}

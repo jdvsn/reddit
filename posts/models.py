@@ -8,9 +8,17 @@ import timeago
 class Subreddit(models.Model):
     class Meta:
         ordering = ['subreddit_name']
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_by = models.ForeignKey(User, related_name='subreddits_created', on_delete=models.CASCADE)
     subreddit_name = models.CharField(max_length=20, unique=True)
+    subreddit_info = models.TextField(max_length=300, blank=True, null=True)
+    moderators = models.ManyToManyField(User, related_name='subreddits_moderated')
     url = models.SlugField()
+
+    def moderator_list(self):
+        list = []
+        for m in self.moderators.all():
+            list.append(m.username)
+        return list
 
     def save(self, *args, **kwargs):
         self.url = slugify(self.subreddit_name)
@@ -22,6 +30,8 @@ class Subreddit(models.Model):
 class Post(models.Model):
     class Meta:
         ordering = ['-created_at']
+        permissions = [('admin_delete_post', 'admin delete post')]
+
     id = models.AutoField(primary_key=True)
     created_by = models.ForeignKey(User, related_name='posts', on_delete=models.CASCADE)
     subreddit = models.ForeignKey(Subreddit, related_name='posts', on_delete=models.CASCADE)
@@ -31,7 +41,7 @@ class Post(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     score = models.IntegerField(default=0)
     url = models.SlugField(max_length=55)
-    
+
     def type(self):
         return 'post'
 
@@ -48,6 +58,16 @@ class Post(models.Model):
             return self.post_body[:197] + '...'
         return self.post_body
 
+    def can_delete(self, user):
+        if user == self.created_by:
+            return True
+        elif user in self.subreddit.moderators.all():
+            return True
+        elif user.has_perm('posts.admin_delete_post'):
+            return True
+        else:
+            return False
+
     def save(self, *args, **kwargs):
         self.url = slugify('%s-%s' % (get_random_string(4, '123456789'), self.post_title))
         super(Post, self).save(*args, **kwargs)
@@ -58,6 +78,7 @@ class Post(models.Model):
 class Comment(models.Model):
     class Meta:
         ordering = ['-created_at']
+        permissions = [('admin_delete_comment', 'admin delete comment')]
     id = models.AutoField(primary_key=True)
     created_by = models.ForeignKey(User, related_name='comments', on_delete=models.CASCADE)
     post = models.ForeignKey(Post, related_name='comments', on_delete=models.CASCADE)
@@ -78,7 +99,17 @@ class Comment(models.Model):
         if len(self.comment_text) > 100:
             return self.comment_text[:97] + '...'
         return self.comment_text
-
+    
+    def can_delete(self, user):
+        if user == self.created_by:
+            return True
+        elif user in self.post.subreddit.moderators.all():
+            return True
+        elif user.has_perm('posts.admin_delete_comment'):
+            return True
+        else:
+            return False
+            
     def __str__(self):
         return 'Comment with id %s by %s on post with id %s "%s"' % (self.id, self.created_by, self.post.id, self.post.post_title)  
 

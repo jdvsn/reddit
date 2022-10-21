@@ -42,7 +42,7 @@
                 <h2><a href={% url 'post_detail' post.subreddit.url post.url %}>{{ post.post_title }}</a></h2>
                 <div class="preview-body">
                     {% if post.preview != None %}
-                        <p> {{ post.preview }} </p>
+                        <p>{{ post.preview }}</p>
                     {% endif %}
                     {% if post.post_image.url != None %}
                         <img class="image-preview" src={{ post.post_image.url }}>
