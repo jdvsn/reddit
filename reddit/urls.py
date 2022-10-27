@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from posts import views
 from accounts import views as uviews
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
@@ -8,6 +8,9 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('payments/', include('payments.urls')),
+    path('messages/', include('messaging.urls')),
+    path('awards/', include('awards.urls')),
     path('', views.home_view, name='home', kwargs={'filter': ''}),
     path('new/', views.home_view, name='home_new', kwargs={'filter': '-created_at'}),
     path('top/', views.home_view, name='home_top', kwargs={'filter': '-score'}),
@@ -35,9 +38,6 @@ urlpatterns = [
     path('r/<slug:subreddit_url>/comments/<slug:post_url>/delete/', views.post_delete, name='post_delete'),
     path('r/<slug:subreddit_url>/comments/<slug:post_url>/comment/<int:comment_id>/', views.comment_view, name='comment_view'),
     path('r/<slug:subreddit_url>/comments/<slug:post_url>/comment/<int:comment_id>/delete/', views.comment_delete, name='comment_delete'),
-    path('messages/', views.messages_view, name='messages', kwargs={'folder': 'received'}),
-    path('messages/sent/', views.messages_view, name='messages_sent', kwargs={'folder': 'sent'}),
-    path('messages/create/', views.messages_create, name='messages_create'),
     path('notifications/', views.notifications_view, name='notifications')
 ]
 

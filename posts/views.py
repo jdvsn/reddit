@@ -9,7 +9,8 @@ from itertools import chain
 from operator import attrgetter
 
 from .models import Subreddit, Post, Comment
-from .forms import SubredditForm, PostForm, CommentForm, MessageForm
+from .forms import SubredditForm, PostForm, CommentForm
+from awards.models import Award
 
 class SubredditIndexView(generic.ListView):
     model = Subreddit
@@ -169,33 +170,16 @@ def profile_view(request, user, show_posts, show_comments, filter):
     paginator = Paginator(result, 8)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    return render(request, 'posts/profile.html', {'user': user, 'page_obj' : page_obj, 'show_posts': show_posts, 'show_comments': show_comments})
-
-@login_required(login_url='/login/')
-def messages_view(request, folder):
-    user = request.user
-    if folder == 'received':
-        messages = user.received_messages.all()
-    elif folder =='sent':
-        messages = user.sent_messages.all()
-    paginator = Paginator(messages, 5)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    return render(request, 'posts/messages.html', {'user': user,'folder': folder, 'page_obj': page_obj})
-
-@login_required(login_url='/login/')
-def messages_create(request):
-    if request.method == 'POST':
-        form = MessageForm(request.POST)
-        if form.is_valid():
-            message = form.save(commit=False)
-            message.sent_by = request.user
-            message.sent_to = User.objects.get(id=form.cleaned_data['recipient'])
-            message.save()
-            return HttpResponseRedirect(reverse('messages'))
-    else: 
-        form = MessageForm()
-    return render(request, 'posts/message_create.html', {'form': form})
+    awards = Award.count(user)
+    return render(request, 'posts/profile.html', {
+        'user': user, 
+        'page_obj' : page_obj, 
+        'show_posts': show_posts, 
+        'show_comments': show_comments,
+        'gold_awards': awards['gold'],
+        'silver_awards': awards['silver'],
+        'bronze_awards': awards['bronze'],
+        })
 
 @login_required(login_url='/login/')
 def notifications_view(request):

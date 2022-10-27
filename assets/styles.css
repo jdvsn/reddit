@@ -278,3 +278,8 @@ div.subreddit{
     display: grid;
     grid-template-columns: 1fr 5fr 1fr
 }
+
+div.profile{
+    display: grid;
+    grid-template-columns: 1fr 5fr 1fr
+}

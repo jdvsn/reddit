@@ -2,3 +2,8 @@ combine post and comment vote
 subreddit edit view - info, moderators
 post edit view - title, content
 comment edit view - text
+
+awards functionality
+
+sending - forms, views
+viewing - view amount sent by each user

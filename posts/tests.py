@@ -1,63 +1,14 @@
 from django.test import TestCase
 from .models import Subreddit, Post
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Permission
 from django.urls import reverse
 from datetime import datetime, timedelta
-
-class SubredditModelTests(TestCase):
-    def setUp(self):
-        self.user = User.objects.create()
-        self.subreddit = Subreddit.objects.create(subreddit_name='test', created_by=self.user)
        
-    def test_sorted_new_returns_empty_queryset_when_0_posts(self):
-        self.assertEqual(len(self.subreddit.sorted_new()), 0)
-
-    def test_sorted_new_returns_post_when_1_post(self):
-        self.post = self.subreddit.posts.create(created_by=self.user)
-        actual_post = list(self.subreddit.sorted_new())
-        expected_post = [self.post]
-        self.assertEqual(expected_post, actual_post)
-
-    def test_sorted_new_returns_sorted_posts(self):
-        self.post_tomorrow = self.subreddit.posts.create(created_by=self.user)
-        self.post_today = self.subreddit.posts.create(created_by=self.user)
-        self.post_yesterday = self.subreddit.posts.create(created_by=self.user)
-        
-        self.post_tomorrow.created_at = datetime.now() + timedelta(1)
-        self.post_tomorrow.save()
-        self.post_today.created_at = datetime.now()
-        self.post_today.save()
-        self.post_yesterday.created_at = datetime.now() - timedelta(1)
-        self.post_yesterday.save()
-
-        self.assertEqual(
-            list(self.subreddit.sorted_new()),
-            [self.post_tomorrow, self.post_today, self.post_yesterday]
-            )
-    
-    def test_sorted_top_returns_empty_queryset_when_0_posts(self):
-        self.assertEqual(len(self.subreddit.sorted_top()), 0)
-
-    def test_sorted_top_returns_post_when_1_post(self):
-        self.post = self.subreddit.posts.create(created_by=self.user)
-        actual_post = list(self.subreddit.sorted_top())
-        expected_post = [self.post]
-        self.assertEqual(expected_post, actual_post)
-
-    def test_sorted_top_returns_sorted_posts(self):
-        self.post_low = self.subreddit.posts.create(created_by=self.user, score = -1)
-        self.post_middle = self.subreddit.posts.create(created_by=self.user, score = 0)
-        self.post_high = self.subreddit.posts.create(created_by=self.user, score = 1)
-
-        self.assertEqual(
-            list(self.subreddit.sorted_top()), 
-            [self.post_high, self.post_middle, self.post_low]
-            )
-    
 class PostModelTests(TestCase):
     def setUp(self):
-        self.user = User.objects.create()
-        self.subreddit = Subreddit.objects.create(subreddit_name='test', created_by=self.user)
+        self.user = User.objects.create(username='user')
+        self.subreddit_creator = User.objects.create(username='subreddit creator')
+        self.subreddit = Subreddit.objects.create(subreddit_name='test', created_by=self.subreddit_creator)
            
     def test_comment_count_returns_0_when_no_comments(self):
         self.post = self.subreddit.posts.create(created_by=self.user)
@@ -73,9 +24,9 @@ class PostModelTests(TestCase):
         self.assertEqual(5, self.post_5.comment_count())
         self.assertEqual(100, self.post_100.comment_count())
 
-    def test_preview_returns_empty_string_when_post_body_is_none(self):
+    def test_preview_returns_none_when_post_body_is_empty(self):
         self.post = self.subreddit.posts.create(created_by=self.user)
-        self.assertEqual(self.post.preview(), '')
+        self.assertEqual(self.post.preview(), None)
 
     def test_preview_returns_post_body_when_200_characters_or_fewer(self):
         self.post = self.subreddit.posts.create(created_by=self.user, post_body = 10 * 'a')
@@ -86,6 +37,40 @@ class PostModelTests(TestCase):
         self.assertEqual(200, len(self.post.preview()))
         self.assertEqual('...', self.post.preview()[-3:])
 
+    def test_can_delete_returns_true_when_post_creator(self):
+        self.post = self.subreddit.posts.create(created_by=self.user)
+        self.assertTrue(self.post.can_delete(self.user)) # returns True when post creator
+        self.assertFalse(self.user in self.subreddit.moderators.all()) # and not a subreddit moderator
+        self.assertFalse(self.user.has_perm('posts.admin_delete_post')) # and not an admin
+
+    def test_can_delete_returns_true_when_subreddit_moderator(self):
+        self.post = self.subreddit.posts.create(created_by=self.user)
+        self.subreddit_moderator = User.objects.create(username='subreddit moderator')
+        self.subreddit.moderators.add(self.subreddit_moderator)
+        self.assertTrue(self.post.can_delete(self.subreddit_moderator)) # return True when a subreddit moderator
+        self.assertNotEqual(self.post.created_by, self.subreddit_moderator) # and not post creator
+        self.assertFalse(self.user.has_perm('posts.admin_delete_post')) # and not an admin
+
+    def test_can_delete_returns_true_when_admin(self):
+        self.post = self.subreddit.posts.create(created_by=self.user)
+        self.admin = User.objects.create(username='admin')
+        self.admin.user_permissions.add(Permission.objects.get(name='admin delete post'))
+        self.assertTrue(self.post.can_delete(self.admin)) # return True when admin
+        self.assertNotEqual(self.post.created_by, self.admin) # and not post creator
+        self.assertFalse(self.user in self.subreddit.moderators.all()) # and not a subreddit moderator
+        
+    def test_can_delete_returns_false_when_not_post_creator_or_moderator_or_admin(self):
+        self.post = self.subreddit.posts.create(created_by=self.user)
+        self.user_2 = User.objects.create()
+        self.assertFalse(self.post.can_delete(self.user_2))
+
+    def test_can_delete_returns_false_when_moderator_of_a_different_subreddit(self):
+        self.post = self.subreddit.posts.create(created_by=self.user)
+        self.user_2 = User.objects.create()
+        self.subreddit_2 = Subreddit.objects.create(created_by=self.user_2)
+        self.subreddit_2.moderators.add(self.user_2)
+        self.assertFalse(self.post.can_delete(self.user_2))
+        
 class SubredditCreateViewTests(TestCase):
     def setUp(self):
         self.user = User.objects.create(username='testuser')
@@ -154,9 +139,9 @@ class PostCreateViewTests(TestCase):
 
     def test_post_create_view_success(self):
         self.client.login(username='testuser', password='password')
-        response = self.client.post(self.post_create_url, {'subreddit': self.subreddit.id,'post_title': 'test_post'})  
-        self.assertRedirects(response, reverse('post_detail', args=[self.subreddit.url, 'test_post']))
-        self.assertEqual(str(Post.objects.get(post_title='test_post')), 'test_post')
+        response = self.client.post(self.post_create_url, {'subreddit': self.subreddit.id,'post_title': 'test_post'})
+        test_post = Post.objects.get(post_title='test_post')  
+        self.assertRedirects(response, reverse('post_detail', args=[self.subreddit.url, test_post.url]))
 
 class PostDetailViewTests(TestCase):
     def setUp(self):
@@ -171,40 +156,40 @@ class PostDetailViewTests(TestCase):
         self.assertEqual(response.status_code, 404)
 
     def test_post_detail_view_show_post(self):
-        response = self.client.get(reverse('post_detail', args=[self.subreddit.url, 'test_post']))
+        response = self.client.get(reverse('post_detail', args=[self.subreddit.url, self.post.url]))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'posts/post_detail.html')
 
     def test_post_detail_view_comment_requires_login(self):
-        response = self.client.post(reverse('post_detail', args=[self.subreddit.url, 'test_post']), {'comment_text': 'test'})
-        self.assertRedirects(response, '/login/?next=/r/test/comments/test_post/')
+        response = self.client.post(reverse('post_detail', args=[self.subreddit.url, self.post.url]), {'comment_text': 'test'})
+        self.assertRedirects(response, '/login/?next=%s' % (reverse('post_detail', args=[self.subreddit.url, self.post.url])))
 
     def test_post_detail_view_comment_form_empty(self):
         self.client.login(username='testuser', password='password')
-        response = self.client.post(reverse('post_detail', args=[self.subreddit.url, 'test_post']), {'comment_text': ''})
+        response = self.client.post(reverse('post_detail', args=[self.subreddit.url, self.post.url]), {'comment_text': ''})
         self.assertFormError(response, 'form', 'comment_text', 'This field is required.')
 
     def test_post_detail_view_comment_success(self):
         self.client.login(username='testuser', password='password')
-        response = self.client.post(reverse('post_detail', args=[self.subreddit.url, 'test_post']), {'comment_text': 'test'})
-        self.assertRedirects(response, reverse('post_detail', args=[self.subreddit.url, 'test_post']))
+        response = self.client.post(reverse('post_detail', args=[self.subreddit.url, self.post.url]), {'comment_text': 'test'})
+        self.assertRedirects(response, reverse('post_detail', args=[self.subreddit.url, self.post.url]))
         self.assertEqual(len(self.post.comments.all()), 1)
 
     def test_post_detail_view_comment_reply_requires_login(self):
         self.comment = self.post.comments.create(comment_text='test_comment', created_by=self.user)
-        response = self.client.post(reverse('post_detail', args=[self.subreddit.url, 'test_post']), {'comment_text': 'test', 'reply': self.comment})
-        self.assertRedirects(response, '/login/?next=/r/test/comments/test_post/')
+        response = self.client.post(reverse('post_detail', args=[self.subreddit.url, self.post.url]), {'comment_text': 'test', 'parent_id': self.comment.id})
+        self.assertRedirects(response, '/login/?next=%s' % (reverse('post_detail', args=[self.subreddit.url, self.post.url])))
 
     def test_post_detail_view_comment_reply_form_empty(self):
         self.comment = self.post.comments.create(comment_text='test_comment', created_by=self.user)
         self.client.login(username='testuser', password='password')
-        response = self.client.post(reverse('post_detail', args=[self.subreddit.url, 'test_post']), {'comment_text': '', 'reply': self.comment})
+        response = self.client.post(reverse('post_detail', args=[self.subreddit.url, self.post.url]), {'comment_text': '', 'parent_id': self.comment.id})
         self.assertFormError(response, 'form', 'comment_text', 'This field is required.')
 
     def test_post_detail_view_comment_reply_success(self):
         self.comment = self.post.comments.create(comment_text='test_comment', created_by=self.user)
         self.client.login(username='testuser', password='password')
-        response = self.client.post(reverse('post_detail', args=[self.subreddit.url, 'test_post']), {'comment_text': 'test', 'reply_id': self.comment.id})
-        self.assertRedirects(response, reverse('post_detail', args=[self.subreddit.url, 'test_post']))
+        response = self.client.post(reverse('post_detail', args=[self.subreddit.url, self.post.url]), {'comment_text': 'test', 'parent_id': self.comment.id})
+        self.assertRedirects(response, reverse('post_detail', args=[self.subreddit.url, self.post.url]))
         self.assertEqual(len(self.post.comments.all()), 2)
         self.assertEqual(len(self.comment.replies.all()), 1)

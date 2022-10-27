@@ -26,8 +26,16 @@
     </div>
     <div class="subreddit-sidebar-right">
     <p>r/{{ subreddit.subreddit_name }}</p>
+    {% if subreddit.subreddit_info %}
+    <p>{{ subreddit.subreddit_info }}</p>
+    {% endif %}
     <p>created by {{ subreddit.created_by }}</p>
-    <p>moderators {{ subreddit.moderator_list }}</p>
+    <p>moderators</p>
+    <ul>
+    {% for moderator in subreddit.moderators.all %}
+    <li>{{ moderator.username}} </li>
+    {% endfor %}
+    </ul>
     </div>
 </div>
 

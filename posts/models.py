@@ -14,12 +14,6 @@ class Subreddit(models.Model):
     moderators = models.ManyToManyField(User, related_name='subreddits_moderated')
     url = models.SlugField()
 
-    def moderator_list(self):
-        list = []
-        for m in self.moderators.all():
-            list.append(m.username)
-        return list
-
     def save(self, *args, **kwargs):
         self.url = slugify(self.subreddit_name)
         super(Subreddit, self).save(*args, **kwargs)
@@ -54,6 +48,8 @@ class Post(models.Model):
         return len(self.comments.all())
 
     def preview(self):
+        if not self.post_body:
+            return None
         if len(self.post_body) > 200:
             return self.post_body[:197] + '...'
         return self.post_body
@@ -112,20 +108,3 @@ class Comment(models.Model):
             
     def __str__(self):
         return 'Comment with id %s by %s on post with id %s "%s"' % (self.id, self.created_by, self.post.id, self.post.post_title)  
-
-class Message(models.Model):
-    class Meta:
-        ordering = ['-created_at']
-    id = models.AutoField(primary_key=True)
-    sent_by = models.ForeignKey(User, related_name='sent_messages', on_delete=models.CASCADE)
-    sent_to = models.ForeignKey(User, related_name='received_messages', on_delete=models.CASCADE)
-    message_text = models.TextField(max_length=500)
-    created_at = models.DateTimeField(auto_now_add=True)
-    
-    def when(self):
-        now = datetime.now(timezone.utc)
-        date = self.created_at
-        return timeago.format(date, now)
-
-    def __str__(self):
-        return 'Message with id %s sent from %s to %s' % (self.id, self.sent_by, self.sent_to)
