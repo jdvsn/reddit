@@ -1,0 +1,24 @@
+{% extends 'awards/base.html' %}
+
+{% block awards %}
+<div class="awards-info">
+    <div>
+        <h3>Awards received</h3>
+        <p>Gold: {{ received_gold_awards }}</p>
+        <p>Silver: {{ received_silver_awards }}</p>
+        <p>Bronze: {{ received_bronze_awards }}</p>
+    </div>
+    <div>
+    <h3>Awards sent</h3>
+        <p>Gold: {{ sent_gold_awards }}</p>
+        <p>Silver: {{ sent_silver_awards }}</p>
+        <p>Bronze: {{ sent_bronze_awards }}</p>
+    </div>
+    <div>
+        <h3>Awards unsent</h3>
+        <p>Gold: {{ unsent_gold_awards }}</p>
+        <p>Silver: {{ unsent_silver_awards }}</p>
+        <p>Bronze: {{ unsent_bronze_awards }}</p>
+    </div>
+</div>
+{% endblock %}

@@ -19,6 +19,7 @@
             <div class="header accounts">
                 <ul>
                     {% if user.is_authenticated %}
+                        <li class="awards-button"><a href={% url 'awards' %}>awards</a></li>
                         <li class="notifications-button"><a href={% url 'notifications' %}>&#128276;</a></li>
                         <li class="messages-button"><a href={% url 'messages' %}>&#9993;</a></li>
                         <li class="current-user"><a href={% url 'profile' user %}>u/{{ user }}</a></li>

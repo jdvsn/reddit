@@ -1,5 +1,5 @@
-from django.contrib.auth import authenticate, login, logout
-from django.http import HttpResponseRedirect, HttpResponse
+from django.contrib.auth import login, logout
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from accounts.forms import UserForm
 from django.contrib.auth.forms import AuthenticationForm

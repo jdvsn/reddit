@@ -29,6 +29,7 @@ urlpatterns = [
     path('u/<slug:user>/comments/top/', views.profile_view, name='profile_comments_top', kwargs={'show_posts': False, 'show_comments': True,'filter': '-score'}),
     path('r/', views.SubredditIndexView.as_view(), name='subreddit_index'),
     path('r/<slug:subreddit_url>/', views.subreddit_view, name='subreddit', kwargs={'filter': ''}),
+    path('r/<slug:subreddit_url>/edit/', views.subreddit_edit, name='subreddit_edit'),
     path('r/<slug:subreddit_url>/new/', views.subreddit_view, name='subreddit_new', kwargs={'filter': '-created_at'}),
     path('r/<slug:subreddit_url>/top/', views.subreddit_view, name='subreddit_top', kwargs={'filter': '-score'}),
     path('r/<slug:subreddit_url>/submit/', views.post_create, name='post_create'),

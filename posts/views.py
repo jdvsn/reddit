@@ -9,7 +9,7 @@ from itertools import chain
 from operator import attrgetter
 
 from .models import Subreddit, Post, Comment
-from .forms import SubredditForm, PostForm, CommentForm
+from .forms import SubredditForm, PostForm, CommentForm, SubredditEditForm
 from awards.models import Award
 
 class SubredditIndexView(generic.ListView):
@@ -48,6 +48,35 @@ def subreddit_create(request):
     else:
         form = SubredditForm()
     return render(request, 'posts/subreddit_create.html', {'form': form})
+
+@login_required(login_url='/login/')
+def subreddit_edit(request, subreddit_url):
+    subreddit = Subreddit.objects.get(url=subreddit_url)
+    if request.user == subreddit.created_by:
+        can_edit = True
+        if request.method == 'POST':
+            form = SubredditEditForm(request.POST, instance=subreddit)
+            if form.is_valid():
+                try:
+                    new_moderator = form.cleaned_data['new_moderator']
+                except:
+                    new_moderator = None
+                try:
+                    remove_moderator = form.cleaned_data['remove_moderator']
+                except:
+                    remove_moderator = None
+                if new_moderator:
+                    subreddit.moderators.add(new_moderator)
+                if remove_moderator:
+                    subreddit.moderators.remove(remove_moderator)
+                subreddit.save(update_fields=['subreddit_info'])
+                return HttpResponseRedirect(reverse('subreddit', args=[subreddit_url]))
+        else:
+            form = SubredditEditForm(instance=subreddit)
+    else:
+        can_edit = False
+        form = None
+    return render(request, 'posts/subreddit_edit.html', {'form': form, 'subreddit': subreddit, 'can_edit': can_edit})
 
 @login_required(login_url='/login/')
 def post_create(request, subreddit_url):
@@ -170,7 +199,7 @@ def profile_view(request, user, show_posts, show_comments, filter):
     paginator = Paginator(result, 8)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    awards = Award.count(user)
+    awards = Award.received_awards_count(user)
     return render(request, 'posts/profile.html', {
         'user': user, 
         'page_obj' : page_obj, 

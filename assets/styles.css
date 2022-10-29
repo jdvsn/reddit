@@ -283,3 +283,18 @@ div.profile{
     display: grid;
     grid-template-columns: 1fr 5fr 1fr
 }
+
+ul.awards-nav li{
+    display: inline-block;
+    padding: 10px;
+}
+
+div.awards-info{
+    display: grid;
+    grid-template-columns:1fr 1fr 1fr
+}
+
+div.awards-page{
+    margin: auto;
+    max-width: 1150;
+}

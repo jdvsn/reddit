@@ -1,8 +1,5 @@
-from django.contrib.auth.models import User
 from django import forms
 from django.contrib.auth.forms import UserCreationForm  
-from django.forms.fields import EmailField  
-from django.forms.forms import Form  
 
 class UserForm(UserCreationForm):
     username = forms.CharField(

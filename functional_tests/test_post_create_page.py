@@ -54,6 +54,6 @@ class TestPostCreatePage(StaticLiveServerTestCase):
             self.browser.current_url, 
             self.live_server_url + reverse('post_detail', args=[self.subreddit.url, self.subreddit.posts.get(id=1).url]))
         self.assertEqual(
-            self.browser.find_element(By.TAG_NAME, 'h1').text, 
+            self.browser.find_element(By.TAG_NAME, 'h2').text, 
             'test post'
             )

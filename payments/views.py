@@ -28,7 +28,7 @@ def stripe_config(request):
 @csrf_exempt
 def create_checkout_session(request, tier, price_id):
     if request.method == 'GET':
-        domain_url = 'http://%s/' % (request.get_host())
+        domain_url = 'http://%s' % (request.get_host())
         stripe.api_key = settings.STRIPE_SECRET_KEY
         try:
             checkout_session = stripe.checkout.Session.create(
@@ -40,8 +40,8 @@ def create_checkout_session(request, tier, price_id):
                     'quantity': 1,
                 }],  
                 mode='payment',
-                success_url=domain_url + reverse('success') + '?session_id={CHECKOUT_SESSION_ID}',
-                cancel_url=domain_url + reverse('cancelled'),
+                success_url=domain_url + reverse('payments_success') + '?session_id={CHECKOUT_SESSION_ID}',
+                cancel_url=domain_url + reverse('payments_cancelled'),
             )
             return JsonResponse({'sessionId': checkout_session['id']})
         except Exception as e:
@@ -69,6 +69,6 @@ def stripe_webhook(request):
     if event['type'] == 'checkout.session.completed':
         user = User.objects.get(id=event.data.object.client_reference_id)
         tier = event.data.object.metadata.tier
-        Award.buy(user, tier)
+        Award(purchased_by=user, tier=tier).save()
         
     return HttpResponse(status=200)

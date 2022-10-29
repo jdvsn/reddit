@@ -1,6 +1,7 @@
 from django import forms
 from django.forms import ModelForm, Textarea, TextInput
 from django.utils.translation import gettext_lazy as _
+from django.contrib.auth.models import User
 
 from .models import Subreddit, Post, Comment
 
@@ -22,6 +23,34 @@ class SubredditForm(ModelForm):
         }
         error_messages = {'subreddit_name': {'unique': 'A subreddit with this name already exists.'}}
 
+class SubredditEditForm(ModelForm):
+    class Meta:
+        model = Subreddit
+        fields = ['subreddit_info']
+
+    new_moderator = forms.CharField(max_length=20, required=False)
+    remove_moderator = forms.CharField(max_length=20, required=False)
+
+    def clean_new_moderator(self):
+        user = self.cleaned_data['new_moderator']
+        if user == '':
+            return None
+        try:
+            new_moderator = User.objects.get(username=user)
+        except User.DoesNotExist:
+            raise forms.ValidationError('User does not exist')
+        return new_moderator
+
+    def clean_remove_moderator(self):
+        user = self.cleaned_data['remove_moderator']
+        if user == '':
+            return None
+        try:
+            remove_moderator = User.objects.get(username=user)
+        except User.DoesNotExist:
+            raise forms.ValidationError('User does not exist')
+        return remove_moderator
+    
 class PostForm(ModelForm):
     class Meta:
         model = Post

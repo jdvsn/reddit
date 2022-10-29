@@ -1,0 +1,21 @@
+{% extends 'posts/base.html' %}
+
+{% block content %}
+<div class="awards-page">
+<h1>u/{{ user }} awards</h1>
+<ul class="awards-nav">
+    <li>
+        <a href={% url 'awards' %}>View your received awards</a>
+    </li>
+    <li>
+        <a href={% url 'awards_send' %}>Send an award</a>
+    </li>
+    <li>
+        <a href={% url 'payments_home' %}>Buy an award</a>
+    </li>
+</ul>
+
+{% block awards %}
+{% endblock %}
+</div>
+{% endblock %}

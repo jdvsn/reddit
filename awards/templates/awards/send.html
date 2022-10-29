@@ -1,0 +1,26 @@
+{% extends 'awards/base.html' %}
+
+{% block awards %}
+<h2>Send an award</h2>
+{% if unsent_awards %}
+    <p>Awards available to send</p>
+
+    {% if unsent_gold_awards %}<p>Gold: {{ unsent_gold_awards }}</p>{% endif %}
+
+    {% if unsent_silver_awards %}<p>Silver: {{ unsent_silver_awards }}</p>{% endif %}
+
+    {% if unsent_bronze_awards %}<p>Bronze: {{ unsent_bronze_awards }}</p>{% endif %}
+
+
+    <form class="award-send-form" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+            <table>
+            {{ award_form.as_table }}
+            </table>
+        <input type="submit" name="submit" value="Submit">
+    </form>
+
+{% else %}
+<p>You have no awards available to send, to purchase an award<a href={% url 'payments_home' %}> click here</a></p>
+{% endif %}
+{% endblock %}
