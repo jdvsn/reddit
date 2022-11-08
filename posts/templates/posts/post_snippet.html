@@ -1,0 +1,48 @@
+<div class="post-container p-2">
+    <div class="post rounded bg-post border border-border d-flex flex-row">
+        <div class="votes-container">
+            <div class="votes d-flex flex-column">
+                <form action={% url 'post_vote' post.subreddit.url post.url %} method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="vote" value="+1">
+                    <input class="upvote btn btn-sm btn-vote btn-outline-*" type="submit" value="▲">
+                </form>
+                <div style="color: #D7DADC" class="score mx-auto">{{ post.vote_total }}</div>
+                <form class="m-w-100" action={% url 'post_vote' post.subreddit.url post.url %} method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="vote" value="-1">
+                    <input class="downvote btn btn-sm btn-vote btn-outline-*" type="submit" value="▼">
+                </form>
+            </div>
+        </div>
+        <div class="post-details w-100">
+            <div class="post-details container d-flex flex-column p-0 m-0">
+                <div class="post-info">
+                    <small class="text-muted">
+                        posted {{ post.when }} 
+                        {% if home %}
+                        to <a class="text-muted link-underline" href={% url 'subreddit' post.subreddit.url %}>r/{{ post.subreddit }}</a> 
+                        {% endif %}
+                        by <a class="text-muted link-underline" href={% url 'profile' post.created_by %}>{{ post.created_by }}</a> | 
+                        {{ post.comment_count }} comments
+                    </small>
+                </div>
+                <div class="post-preview p-1 position-relative">
+                    <a href={% url 'post_detail' post.subreddit.url post.url %} class="stretched-link"></a>
+                        <div class="post-preview-container rounded bg-secondary p-2 pt-1">
+                            <h4 class="post-title mb-2">{{ post.post_title }}</h4>
+                            {% if post.preview != None %}
+                            <p class="preview-body text-wrap text-break">{{ post.preview }}</p>
+                            {% endif %}
+                            {% if post.post_image.url != None %}
+                            <div class="img container d-flex flex-wrap justify-content-center p-0 m-0">
+                                <img class="preview-image rounded p-1" style="max-height: 600px; max-width: 600px" src={{ post.post_image.url }}>
+                            </div>
+                            {% endif %}
+                        </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

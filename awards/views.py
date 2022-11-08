@@ -3,6 +3,7 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+from django.db.models import Count
 
 from .models import Award
 from .forms import AwardSendForm
@@ -27,16 +28,17 @@ def awards_view(request):
 
 @login_required(login_url='/login/')
 def awards_send(request):
-    unsent_awards = Award.unsent_awards_count(request.user)
+    user = request.user
+    unsent_awards = Award.unsent_awards_count(user)
     if request.method == 'POST':
-        award_form = AwardSendForm(data=request.POST, user=request.user)
+        award_form = AwardSendForm(data=request.POST, user=user)
         if award_form.is_valid():
-            award = Award.get_unsent_award(request.user, award_form.cleaned_data['award_tier'])
+            award = user.purchased_awards.filter(sent_to=None, tier=award_form.cleaned_data['award_tier']).first()
             award.sent_to = User.objects.get(id=award_form.cleaned_data['recipient'])
             award.save()
             return HttpResponseRedirect(reverse('awards_send'))
     else:
-        award_form = AwardSendForm(user=request.user)
+        award_form = AwardSendForm(user=user)
 
     return render(request, 'awards/send.html', {
         'user': request.user,
@@ -49,5 +51,6 @@ def awards_send(request):
 
 @login_required(login_url='/login/')
 def awards_detail(request):
-    pass
-    
+    awards = request.user.received_awards.all()
+    awards_detail = awards.values('purchased_by_username', 'tier').annotate(count=Count('purchased_by')).order_by()
+    return render(request, 'awards/detail.html', {'awards_detail': awards_detail})

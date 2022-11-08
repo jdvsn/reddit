@@ -1,0 +1,301 @@
+body{
+    background: rgb(36, 36, 39);
+    color: #fff;
+}
+
+body *{
+    font-family: Helvetica;
+}
+
+h1,h2,h3,h4,h5{
+    font-weight: normal;
+    margin: 0;
+}
+
+a, a:hover, a:visited{
+    color: rgb(185, 185, 185);
+    text-decoration: none;
+}
+
+p{
+    margin-left: 5px;
+}
+
+ul{
+    margin: 0;
+}
+
+h1{
+    margin: 10px;
+    padding: 5px 5px 5px 30px
+}
+
+header.wrapper{
+    background: rgb(30, 30, 33);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding: 5px 5px 5px 5px; 
+    margin: 5px;
+    max-height: 30px
+}
+
+nav ul{
+    margin-left: 5px;
+    padding: 0;
+}
+
+
+nav li{
+    display: inline-block;
+    margin-right: 5px;
+}
+
+button{
+    padding: 0 0 0 0;
+}
+
+div ul{
+    margin-right: 5px;
+}
+
+div.accounts.header{
+    justify-self: end;
+}
+
+div.accounts.header li{
+    display: inline-block;
+    margin-left: 5px;
+    max-height: 20px
+}
+
+div button{
+    background: none;
+    color: rgb(185, 185, 185);
+    cursor: pointer;
+    border: 0;
+    font-size: 1em;
+ }
+
+input.upvote{
+    background: none;
+    color: #fff;
+    cursor: pointer;
+    border: 0;
+    font-size: 1em;
+ }
+
+input.downvote{
+    background: none;
+    color:  #fff;
+    cursor: pointer;
+    border: 0;
+    font-size: 1em;
+ }
+
+header.subreddit{
+     background: rgb(74 74 74);
+     display: grid;
+     grid-template-columns: 1fr 1fr;
+     margin: 10px auto;
+     max-width: 1150px
+}
+
+header.profile{
+    background: rgb(74 74 74);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin: 10px auto;
+    max-width: 1150px
+}
+
+header.sort{
+    background: rgb(75 75 75);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding: 5px
+}
+
+div.sort{
+    display: grid;
+    grid-template-columns: 30px 50px;
+    margin-left: 5px;
+    max-height: 30px
+}
+
+div.profile-sort{
+    justify-self: end;
+}
+
+div.submit{
+     justify-self: end;
+     padding: 0px 20px 0px 0px;
+}
+
+.posts{
+     display: grid;
+     padding: 10px 10px 10px 10px;
+     grid-gap: 20px;
+     max-width: 800px;
+     margin: auto
+}
+
+.profile-content{
+    display: grid;
+    padding: 10px 10px 10px 10px;
+    grid-gap: 20px;
+    max-width: 800px;
+    margin: auto
+}
+
+.profile-comment{
+    display: grid;
+    grid-template-columns: 40px 20fr;
+    background: rgb(75 75 75);
+    position: relative; 
+    grid-gap: 0px;
+}
+
+.profile-comment-details{
+    display: grid;
+    grid-template-rows: 20px;
+    grid-gap: 0px;
+    padding: 10px 20px 10px 0px;
+}
+
+.profile-comment-info{
+    font-size: 0.8em;
+}
+
+.profile-comment-text{
+    display: grid;
+    background: rgb(88,88,88);
+    padding: 5px
+}
+
+.post{
+     display: grid;
+     grid-template-columns: 40px 20fr;
+     background: rgb(75 75 75);
+     position: relative; 
+     grid-gap: 0px;
+}
+
+.post .votes{
+     display: grid;
+     justify-self: center;
+     grid-template-rows: 23px 20px 20px;
+     padding: 10px;
+}
+
+.post .votes .score{
+     justify-self: center;
+}
+
+.post .postdetails{
+      display: grid;
+      grid-template-rows: 20px;
+      grid-gap: 0px;
+      padding: 10px 20px 10px 0px;
+}
+
+.post .postdetails .postinfo{
+      font-size: 0.8em;
+}
+
+.post .postdetails .postpreview{
+    display: grid;
+    background: rgb(88,88,88);
+    padding: 5px
+}
+
+h2{
+    margin:5px
+}
+
+img.image-preview{
+    max-width: 700;
+    max-height: 500;
+    padding: 0 0 10px 0;
+}
+
+img.image-detail{
+    max-width: 1200;
+    max-height: 800;
+}
+
+.preview-body{
+    margin: auto
+}
+
+.post-detail{
+    display: grid;
+    grid-gap: 2px;
+    max-width: 1150px;
+    margin: auto;
+    background: rgb(150,150,150);
+}
+
+.the-post{
+    background: rgb(88,88,88);
+    padding: 0 0 20 0;
+}
+
+.the-post h2{
+    font-size: 2.6em;
+}
+
+.comments{
+    background: rgb(88,88,88);
+}
+
+.messages{
+    display: grid;
+    padding: 10px 10px 10px 10px;
+    grid-gap: 20px;
+    max-width: 800px;
+    margin: auto
+}
+
+.message{
+    display: grid;
+    background: rgb(75 75 75);
+    position: relative; 
+    grid-gap: 3px;
+    padding: 5px;
+}
+
+.message-info{
+    font-size: 0.8em;
+}
+
+.message-body{
+    display: grid;
+    background: rgb(88,88,88);
+    padding: 5px
+}
+
+div.subreddit{
+    display: grid;
+    grid-template-columns: 1fr 5fr 1fr
+}
+
+div.profile{
+    display: grid;
+    grid-template-columns: 1fr 5fr 1fr
+}
+
+ul.awards-nav li{
+    display: inline-block;
+    padding: 10px;
+}
+
+div.awards-info{
+    display: grid;
+    grid-template-columns:1fr 1fr 1fr
+}
+
+div.awards-page{
+    margin: auto;
+    max-width: 1150;
+}
+

@@ -1,300 +1,148 @@
-body{
-    background: rgb(36, 36, 39);
-    color: #fff;
+html{
+    background-color: #030303
 }
 
-body *{
-    font-family: Helvetica;
-}
-
-h1,h2,h3,h4,h5{
-    font-weight: normal;
+h1,h2,h3,h4,h5,h6{
     margin: 0;
+    color: rgb(215,218,220);
 }
 
-a, a:hover, a:visited{
-    color: rgb(185, 185, 185);
+.post-title{
+    font-weight: normal;
+}
+
+a, a:visited{
     text-decoration: none;
+    color: rgb(215,218,220);
+}
+
+a.link-underline:hover{
+    text-decoration: underline;
+ }
+
+a.link-fade:hover{
+    color:grey;
 }
 
 p{
-    margin-left: 5px;
-}
-
-ul{
     margin: 0;
-}
-
-h1{
-    margin: 10px;
-    padding: 5px 5px 5px 30px
-}
-
-header.wrapper{
-    background: rgb(30, 30, 33);
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 5px 5px 5px 5px; 
-    margin: 5px;
-    max-height: 30px
-}
-
-nav ul{
-    margin-left: 5px;
     padding: 0;
+    color: rgb(215,218,220);
 }
 
-
-nav li{
-    display: inline-block;
-    margin-right: 5px;
-}
-
-button{
-    padding: 0 0 0 0;
-}
-
-div ul{
-    margin-right: 5px;
-}
-
-div.accounts.header{
-    justify-self: end;
-}
-
-div.accounts.header li{
-    display: inline-block;
-    margin-left: 5px;
-    max-height: 20px
-}
-
-div button{
-    background: none;
-    color: rgb(185, 185, 185);
-    cursor: pointer;
-    border: 0;
-    font-size: 1em;
- }
-
-input.upvote{
-    background: none;
-    color: #fff;
-    cursor: pointer;
-    border: 0;
-    font-size: 1em;
- }
-
-input.downvote{
-    background: none;
-    color:  #fff;
-    cursor: pointer;
-    border: 0;
-    font-size: 1em;
- }
-
-header.subreddit{
-     background: rgb(74 74 74);
-     display: grid;
-     grid-template-columns: 1fr 1fr;
-     margin: 10px auto;
-     max-width: 1150px
-}
-
-header.profile{
-    background: rgb(74 74 74);
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    margin: 10px auto;
-    max-width: 1150px
-}
-
-header.sort{
-    background: rgb(75 75 75);
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 5px
-}
-
-div.sort{
-    display: grid;
-    grid-template-columns: 30px 50px;
-    margin-left: 5px;
-    max-height: 30px
-}
-
-div.profile-sort{
-    justify-self: end;
-}
-
-div.submit{
-     justify-self: end;
-     padding: 0px 20px 0px 0px;
+body{ 
+    padding-top: 41px; 
 }
 
 .posts{
-     display: grid;
-     padding: 10px 10px 10px 10px;
-     grid-gap: 20px;
-     max-width: 800px;
-     margin: auto
-}
-
-.profile-content{
-    display: grid;
-    padding: 10px 10px 10px 10px;
-    grid-gap: 20px;
+    min-width: 800px;
     max-width: 800px;
-    margin: auto
 }
 
-.profile-comment{
-    display: grid;
-    grid-template-columns: 40px 20fr;
-    background: rgb(75 75 75);
-    position: relative; 
-    grid-gap: 0px;
+div.post-info{
+    margin-left: 10px;
 }
 
-.profile-comment-details{
-    display: grid;
-    grid-template-rows: 20px;
-    grid-gap: 0px;
-    padding: 10px 20px 10px 0px;
+.form-control:hover, .form-control:focus{
+    box-shadow: inset 0 0 3px 1px grey;
 }
 
-.profile-comment-info{
-    font-size: 0.8em;
+.form-post-body{
+    border-radius: 0px 0px 8px 8px;
 }
 
-.profile-comment-text{
-    display: grid;
-    background: rgb(88,88,88);
-    padding: 5px
+.form-post-image{
+    padding: 6px;
+    border-radius: 0px 0px 8px 8px;
 }
 
-.post{
-     display: grid;
-     grid-template-columns: 40px 20fr;
-     background: rgb(75 75 75);
-     position: relative; 
-     grid-gap: 0px;
+#image-tab{
+    border-radius: 0px 8px 0px 0px;
+    border-color: #4b4d4e;
+    border-width: 1px 1px 0 0;
 }
 
-.post .votes{
-     display: grid;
-     justify-self: center;
-     grid-template-rows: 23px 20px 20px;
-     padding: 10px;
+#text-tab{
+    border-radius: 8px 0px 0px 0px;
+    border-color: #4b4d4e;
+    border-width: 1px 1px 0 1px;
 }
 
-.post .votes .score{
-     justify-self: center;
+#image-tab.active,#text-tab.active{
+    box-shadow: inset 0 -2px 0px 0px grey;
 }
 
-.post .postdetails{
-      display: grid;
-      grid-template-rows: 20px;
-      grid-gap: 0px;
-      padding: 10px 20px 10px 0px;
+#image-tab:hover,#text-tab:hover{
+    box-shadow: inset 0 0 3px 1px grey;
 }
 
-.post .postdetails .postinfo{
-      font-size: 0.8em;
+hr{
+    border-color: #4b4d4e;
 }
 
-.post .postdetails .postpreview{
-    display: grid;
-    background: rgb(88,88,88);
-    padding: 5px
-}
+.file-droppable {
+    background: #272729;
+    border-style: dashed;
+    border-width: 4px 4px 4px 4px;
+    border-color: #4b4d4e;
+    border-radius: 0 0 8px 8px;
+    overflow: hidden;
+    min-height: 400px;
+    position: relative;
+  }
+  
+.file-droppable.filled {
+    background: #272729;
+    border: solid 1px #4b4d4e;
+    border-radius: 0 0 8px 8px;
+    }
 
-h2{
-    margin:5px
-}
+.file-droppable:after {
+    position: absolute;
+    left: 13px;
+    top: 38px;
+    font-size: 10px;
+    font-weight: bold;
+    }
 
-img.image-preview{
-    max-width: 700;
-    max-height: 500;
-    padding: 0 0 10px 0;
-}
-
-img.image-detail{
-    max-width: 1200;
-    max-height: 800;
-}
-
-.preview-body{
-    margin: auto
-}
-
-.post-detail{
-    display: grid;
-    grid-gap: 2px;
-    max-width: 1150px;
-    margin: auto;
-    background: rgb(150,150,150);
-}
-
-.the-post{
-    background: rgb(88,88,88);
-    padding: 0 0 20 0;
-}
-
-.the-post h2{
-    font-size: 2.6em;
-}
-
-.comments{
-    background: rgb(88,88,88);
-}
-
-.messages{
-    display: grid;
-    padding: 10px 10px 10px 10px;
-    grid-gap: 20px;
-    max-width: 800px;
-    margin: auto
-}
-
-.message{
-    display: grid;
-    background: rgb(75 75 75);
-    position: relative; 
-    grid-gap: 3px;
-    padding: 5px;
-}
-
-.message-info{
-    font-size: 0.8em;
-}
-
-.message-body{
-    display: grid;
-    background: rgb(88,88,88);
-    padding: 5px
-}
-
-div.subreddit{
-    display: grid;
-    grid-template-columns: 1fr 5fr 1fr
-}
-
-div.profile{
-    display: grid;
-    grid-template-columns: 1fr 5fr 1fr
-}
-
-ul.awards-nav li{
+.file-droppable::before {
+    content: " ";
     display: inline-block;
+    height: 100%;
+    width: 1%;
+    vertical-align: middle;
+    }
+
+.file-droppable div {
+    display: inline-block;
+    vertical-align: middle;
     padding: 10px;
-}
+    overflow: hidden;
+    word-break: break-all;
+    }
 
-div.awards-info{
-    display: grid;
-    grid-template-columns:1fr 1fr 1fr
-}
+.file-droppable span {
+    position: absolute;
+    font-weight: bold;
+    right: 5px;
+    top: -5px;
+    font-size: 20px;
+    cursor: pointer;
+    z-index: 10;
+    display: none;
+    }
 
-div.awards-page{
-    margin: auto;
-    max-width: 1150;
+.file-droppable input {
+    position: absolute;
+    z-index: 3;
+    display: block;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    }
+
+img.image-upload-preview{
+    max-width: 300px;
+    max-height: 300px;
 }

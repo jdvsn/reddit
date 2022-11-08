@@ -1,52 +1,45 @@
-{% extends 'posts/subreddit_base.html' %}
+{% extends 'posts/base.html' %}
 
-{% block posts %}
-{% for post in page_obj %}
-<div class="post">
-    <div class="votes">
-        <form action={% url 'post_vote' post.subreddit.url post.url %} method="post">
-            {% csrf_token %}
-            <input type="hidden" name="vote" value="+1">
-            <input class="upvote" type="submit" value="▲">
-        </form>
-        <div class="score">{{ post.vote_total }}</div>
-        <form action={% url 'post_vote' post.subreddit.url post.url %} method="post">
-            {% csrf_token %}
-            <input type="hidden" name="vote" value="-1">
-            <input class="downvote" type="submit" value="▼">
-        </form>
-    </div>
-    <div class="postdetails">
-        <div class="postinfo">{{ post.when }} by <a href={% url 'profile' post.created_by %}>{{ post.created_by }}</a> | {{ post.comment_count }} comments</div>
-        <div class="postpreview">
-            <h2><a href={% url 'post_detail' post.subreddit.url post.url %}>{{ post.post_title }}</a></h2>
-            <div class="preview-body">
-                {% if post.preview != '' %}
-                    <p class="preview-text">{{ post.preview }}</p>
-                {% endif %}
-                {% if post.post_image.url != None %}
-                    <img class="image-preview" src={{ post.post_image.url }}>
-                {% endif %}
+{% block content %}
+<div class="d-flex flex-column">
+    <div class="subreddit-header bg-post w-100 pb-4 pt-3 px-5 mt-3 mb-2"><h1 class="display-3">r/{{ subreddit }}</h1></div>
+    <div class="d-flex flex-row">
+        <div class="sidebar-left w-100"></div>
+        <div class="posts">
+            <div class="header-container p-2">
+                <header class="sort rounded bg-post border border-border d-inline-flex justify-content-between w-100">
+                    <div class="d-inline-flex align-items-center">
+                        <a class="link-fade p-2" href={% url 'subreddit_top' subreddit.url %}>top</a>
+                        <a class="link-fade p-2" href={% url 'subreddit_new' subreddit.url %}>new</a>
+                    </div>
+                    <a class="link-fade p-2" href={% url 'post_create' subreddit.url %}>submit</a>
+                </header>
+            </div>
+            {% for post in page_obj %}
+                {% include "posts/post_snippet.html" with post=post %}
+            {% endfor %}
+            <div class="pagination">
+                <span class="step-links">
+                    {% if page_obj.has_previous %}
+                        <a href="?page=1">&laquo; first</a>
+                        <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                    {% endif %}
+                    {% if page_obj.paginator.num_pages > 1 %}
+                    <span class="current">
+                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                    </span>
+                    {% endif %}
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}">next</a>
+                        <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                    {% endif %}
+                </span>
             </div>
         </div>
+        <div class="sidebar-right w-100"></div>
     </div>
 </div>
-{% endfor %}
-<div class="pagination">
-    <span class="step-links">
-        {% if page_obj.has_previous %}
-            <a href="?page=1">&laquo; first</a>
-            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
-        {% endif %}
-        {% if page_obj.paginator.num_pages > 1 %}
-        <span class="current">
-            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-        </span>
-        {% endif %}
-        {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}">next</a>
-            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
-        {% endif %}
-    </span>
-</div>
+
+
+
 {% endblock %}

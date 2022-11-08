@@ -1,11 +1,10 @@
 from django import forms
-from django.forms import ModelForm, Textarea, TextInput
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import User
 
 from .models import Subreddit, Post, Comment
 
-class SubredditForm(ModelForm):
+class SubredditForm(forms.ModelForm):
     class Meta:
         model = Subreddit
         fields = ['subreddit_name', 'subreddit_info']
@@ -14,16 +13,16 @@ class SubredditForm(ModelForm):
             'subreddit_info': _('')
         }
         widgets = {
-            'subreddit_name': TextInput(attrs={
+            'subreddit_name': forms.TextInput(attrs={
                 'placeholder': 'Enter subreddit name',
                 }),
-            'subreddit_info': Textarea(attrs={
+            'subreddit_info': forms.Textarea(attrs={
                 'placeholder': 'Add a short description (optional)'
             })
         }
         error_messages = {'subreddit_name': {'unique': 'A subreddit with this name already exists.'}}
 
-class SubredditEditForm(ModelForm):
+class SubredditEditForm(forms.ModelForm):
     class Meta:
         model = Subreddit
         fields = ['subreddit_info']
@@ -51,32 +50,49 @@ class SubredditEditForm(ModelForm):
             raise forms.ValidationError('User does not exist')
         return remove_moderator
     
-class PostForm(ModelForm):
+class PostForm(forms.ModelForm):
     class Meta:
         model = Post
         fields = ['subreddit', 'post_title', 'post_body', 'post_image']
         labels = {
+            'subreddit': _(''),
             'post_title': _(''),
             'post_body': _(''),
             'post_image': _(''),
         }
         widgets = {
-            'post_title': Textarea(attrs={
-                'cols': 60, 'rows': 1,
-                'placeholder': 'Title your post:'
+            'subreddit': forms.Select(attrs={
+                'class': 'form-control form-select form-subreddit bg-textbox border border-border text-body',
                 }),
-            'post_body': Textarea(attrs={
-                'cols': 80, 'rows': 20,
-                'placeholder': 'Enter post text:'
-                })
+            'post_title': forms.Textarea(attrs={
+                'class': 'form-control form-post-title bg-textbox border border-border text-body',
+                'cols': 68, 'rows': 1,
+                'placeholder': 'Title',
+                }),
+            'post_body': forms.Textarea(attrs={
+                'class': 'form-control form-post-body bg-textbox border border-border text-body',
+                'cols': 68, 'rows': 20,
+                'placeholder': 'Text (optional)',
+                }),
+            'post_image': forms.ClearableFileInput(attrs={
+                'class': 'form-control form-post-image bg-textbox border border-border text-body',
+                'onchange': 'readURL(this);'
+            })
         }
 
-class CommentForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        if 'subreddit' in kwargs:
+            subreddit = kwargs.pop('subreddit')
+            kwargs.update(initial={'subreddit': subreddit})
+        super(PostForm, self).__init__(*args, **kwargs)
+        self.fields['subreddit'].empty_label = "Choose Subreddit"
+
+class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
         fields = ['comment_text']
         labels = {'comment_text': ''}
-        widgets = {'comment_text': Textarea(attrs={
+        widgets = {'comment_text': forms.Textarea(attrs={
                     'cols': 125, 'rows': 4,
                     'placeholder': 'Add a comment:'
                     })

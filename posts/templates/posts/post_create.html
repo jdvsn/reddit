@@ -1,14 +1,63 @@
 {% extends 'posts/base.html' %}
 
 {% block content %}
-<a href={% url 'subreddit' subreddit.url %}>back to r/{{ subreddit }}</a>
-<h1>Submit a post to r/{{ subreddit }}:</h1>  
-
-<form class="post-create-form" action={% url 'post_create' subreddit.url %} method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-        <table>
-        {{ form.as_table }}
-        </table>
-    <input type="submit" name="submit" value="Submit">
-</form>
+{% load crispy_forms_tags %}
+<div class="p-4">
+    <div class="d-flex flex-column bg-secondary p-3 rounded mx-auto border border-border" style="max-width: 600px">
+        <div>
+            <div class="d-flex flex-row justify-content-between">
+                <h5 class="fw-semibold">Submit a post:</h5>
+                {% if subreddit %}
+                <a class="link-fade" href={% url 'subreddit' subreddit.url %}>back to r/{{ subreddit }}</a>
+                {% endif %}
+            </div>
+        </div>
+        <hr class="mt-2 mb-0"/>
+        <div class="form-group">
+            <form class="post-create-form d-flex flex-column p-1 mx-auto" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-5">
+                        <div class="input-group pt-2 pb-3">
+                            {{ form.subreddit.errors}}
+                            <label class="input-group-text bg-textbox text-body border border-border" for="id_subreddit">r/</label>
+                            {{ form.subreddit }}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    {{ form.post_title.errors }}
+                    {{ form.post_title|as_crispy_field }}
+                </div>
+                <ul class="nav nav-tabs nav-justified" id="postTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active bg-textbox border-border" id="text-tab" data-bs-toggle="tab" data-bs-target="#text" type="button" role="tab" aria-controls="text" aria-selected="true"><h6 class="fw-semibold">Text</h6></button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link bg-textbox border-border" id="image-tab" data-bs-toggle="tab" data-bs-target="#image" type="button" role="tab" aria-controls="image" aria-selected="false"><h6 class="fw-semibold">Image</h6></button>
+                    </li>
+                </ul>
+                <div class="tab-content" id="postTabContent">
+                    <div class="tab-pane fade show active" id="text" role="tabpanel" aria-labelledby="text-tab">
+                        {{ form.post_body.errors }}
+                        {{ form.post_body|as_crispy_field }}
+                    </div>
+                    <div class="tab-pane fade pb-3" id="image" role="tabpanel" aria-labelledby="image-tab">
+                        <div class="file-droppable d-flex flex-column justify-content-center w-100 h-100">
+                            <div class="align-self-center"><p class="text-muted">Drag and drop image or click to browse</p></div>
+                            <span>&times;</span>
+                            {{ form.post_image.errors }}
+                            {{ form.post_image }}
+                            <div class="align-self-center mb-4">
+                                <img class="image-upload-preview rounded" id="image-upload-preview" src="#"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr class="mt-0"/>
+                <input type="submit" class="btn btn-secondary p-2 border border-border" name="submit" value="Submit">
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}

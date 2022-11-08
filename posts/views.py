@@ -17,13 +17,14 @@ class SubredditIndexView(generic.ListView):
     template_name = 'posts/subreddit_index.html'
 
 def home_view(request, filter):
+    subreddits = Subreddit.objects.all()
     posts = Post.objects.all()
     if filter:
         posts = posts.order_by(filter)
     paginator = Paginator(posts, 8)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    return render(request, 'posts/home.html', {'page_obj': page_obj})
+    return render(request, 'posts/home.html', {'page_obj': page_obj, 'subreddits': subreddits})
 
 def subreddit_view(request, subreddit_url, filter):
     subreddit = get_object_or_404(Subreddit, url=subreddit_url)
@@ -80,16 +81,19 @@ def subreddit_edit(request, subreddit_url):
 
 @login_required(login_url='/login/')
 def post_create(request, subreddit_url):
-    subreddit = get_object_or_404(Subreddit, url=subreddit_url)
+    try:
+        subreddit = get_object_or_404(Subreddit, url=subreddit_url)
+    except:
+        subreddit = None
     if request.method == 'POST':
-        form = PostForm(request.POST, request.FILES)
+        form = PostForm(request.POST, request.FILES, subreddit=subreddit)
         if form.is_valid():
             post = form.save(commit=False)
             post.created_by = request.user
             post.save()
-            return HttpResponseRedirect(reverse('post_detail', args=[subreddit_url, post.url]))
+            return HttpResponseRedirect(reverse('post_detail', args=[post.subreddit.url, post.url]))
     else:
-        form = PostForm()
+        form = PostForm(subreddit=subreddit)
     return render(request, 'posts/post_create.html', {'form': form, 'subreddit': subreddit})
 
 def post_detail(request, post_url, subreddit_url):
@@ -116,20 +120,6 @@ def post_detail(request, post_url, subreddit_url):
         comment_form = CommentForm()
     return render(request, 'posts/post_detail.html', {'post': post, 'comments': comments, 'comment_form': comment_form})
 
-def post_vote(request, post_url, subreddit_url):
-    post = get_object_or_404(Post, url=post_url)
-    vote = request.POST.get("vote")
-    if request.user.is_authenticated:
-        token = request.user.id
-    else:
-        token = request.META['REMOTE_ADDR']
-    post.add_vote(token, int(vote))
-    post.score = Post.objects.get(url=post_url).vote_total
-    post.save(update_fields=['score'])
-    if request.META.get('HTTP_REFERER') != None:
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    return HttpResponseRedirect('')
-
 @login_required(login_url='/login/')
 def post_delete(request, post_url, subreddit_url):
     post = get_object_or_404(Post, url=post_url)
@@ -140,17 +130,22 @@ def post_delete(request, post_url, subreddit_url):
             post.delete()
             return HttpResponseRedirect(reverse('subreddit', args=[Subreddit.objects.get(url=subreddit_url)]))
     return render(request, 'posts/post_delete.html', {'post': post, 'can_delete': can_delete})
-    
-def comment_vote(request, post_url, subreddit_url, comment_id):
-    comment = get_object_or_404(Comment, id=comment_id)
+
+def vote(request, subreddit_url, post_url, comment_id):
     vote = request.POST.get("vote")
+    if comment_id:
+        object = get_object_or_404(Comment, id=comment_id)
+        type = Comment
+    else:
+        object = get_object_or_404(Post, url=post_url)
+        type = Post
     if request.user.is_authenticated:
         token = request.user.id
     else:
         token = request.META['REMOTE_ADDR']
-    comment.add_vote(token, int(vote))
-    comment.score = Comment.objects.get(id=comment_id).vote_total
-    comment.save(update_fields=['score'])
+    object.add_vote(token, int(vote))
+    object.score = type.objects.get(id=object.id).vote_total
+    object.save(update_fields=['score'])
     if request.META.get('HTTP_REFERER') != None:
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     return HttpResponseRedirect('')

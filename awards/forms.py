@@ -22,4 +22,3 @@ class AwardSendForm(forms.Form):
         if recipient == self.user:
             raise forms.ValidationError('You cannot send an award to yourself')
         return recipient.id
-

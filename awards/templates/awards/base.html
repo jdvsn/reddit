@@ -5,7 +5,10 @@
 <h1>u/{{ user }} awards</h1>
 <ul class="awards-nav">
     <li>
-        <a href={% url 'awards' %}>View your received awards</a>
+        <a href={% url 'awards' %}>Awards home</a>
+    </li>
+    <li>
+        <a href={% url 'awards_detail' %}>Received awards by sender</a>
     </li>
     <li>
         <a href={% url 'awards_send' %}>Send an award</a>

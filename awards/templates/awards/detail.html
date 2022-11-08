@@ -1,0 +1,20 @@
+{% extends 'awards/base.html' %}
+
+{% block awards %}
+<h2>Received awards by sender</h1>
+
+{% regroup awards_detail by purchased_by_username as awards_grouped %}
+
+<ul>
+    {% for sender in awards_grouped %}
+    <li>{{ sender.grouper }}
+        <ul>
+            {% for tier in sender.list %}
+            <li>{{ tier.tier }}: {{ tier.count }}</li>
+            {% endfor %}
+        </ul>
+    </li>
+    {% endfor %}
+</ul>
+
+{% endblock %}

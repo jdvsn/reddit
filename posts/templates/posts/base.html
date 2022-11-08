@@ -1,44 +1,57 @@
 {% load static %}
-
+{% load compress %}
+<!doctype html>
 <html>
     <head>
         <meta charset="utf-8">
-        <title>Reddit</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        {% compress css %}
+        <link type="text/x-scss" href="{% static 'theme.scss' %}" rel="stylesheet" media="screen">
+        {% endcompress %}
         <link rel="stylesheet" href="{% static 'styles.css' %}">
         <script src="https://js.stripe.com/v3/"></script>
         <script src="{% static 'main.js' %}"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+        <link class="jsbin" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+        <script class="jsbin" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+        <script class="jsbin" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.0/jquery-ui.min.js" ></script>
+        <title>Reddit</title>
+        <link rel="apple-touch-icon" sizes="180x180" href="{% static 'favicon/apple-touch-icon.png' %}">
+        <link rel="icon" type="image/png" sizes="32x32" href="{% static 'favicon/favicon-32x32.png' %}">
+        <link rel="icon" type="image/png" sizes="16x16" href="{% static 'favicon/favicon-16x16.png' %}">
+        <link rel="manifest" href="{% static 'favicon/site.webmanifest' %}">
     </head>
     <body>
-        <header class="wrapper">
-            <nav>
-                <ul>
-                    <li><a href={% url 'home' %}>home</a></li>
-                    <li><a href={% url 'subreddit_index' %}>all subreddits</a></li>
+        <header class="navbar border-bottom border-border bg-secondary fixed-top d-flex flex-nowrap justify-content-center p-0 m-0">
+            <div class="w-100 d-flex justify-content-start">
+                <ul class="nav p-2">
+                    <h6><li class="py-1 px-2"><a class="link-fade fw-semibold" href={% url 'home' %}>home</a></li></h6>
+                    <h6><li class="py-1 px-2"><a class="link-fade fw-semibold" href={% url 'subreddit_index' %}>subreddits</a></li></h6>
                 </ul>
-            </nav>
-            <div class="header accounts">
-                <ul>
+            </div>
+            <div class="px-2">
+                <img class="navbar-logo" src="{% static 'favicon/favicon-32x32.png' %}" width="32" height="32" alt="">
+            </div>
+            <div class="w-100 d-flex justify-content-end">
+                <ul class="nav p-2">
                     {% if user.is_authenticated %}
-                        <li class="awards-button"><a href={% url 'awards' %}>awards</a></li>
-                        <li class="notifications-button"><a href={% url 'notifications' %}>&#128276;</a></li>
-                        <li class="messages-button"><a href={% url 'messages' %}>&#9993;</a></li>
-                        <li class="current-user"><a href={% url 'profile' user %}>u/{{ user }}</a></li>
-                        <li>
-                            <form action={% url 'logout' %}>
-                                {% csrf_token %}
-                                <button type="submit">logout</button>
-                            </form>
-                        </li>   
+                    <h6><li class="py-1 px-2"><a class="link-fade fw-semibold" href={% url 'awards' %}>awards</a></li></h6>
+                    <h6><li class="py-1 px-2"><a class="link-fade fw-semibold" href={% url 'notifications' %}>&#128276;</a></li></h6>
+                    <h6><li class="py-1 px-2"><a class="link-fade fw-semibold" href={% url 'messages' %}>&#9993;</a></li></h6>
+                    <h6><li class="py-1 px-2"><a class="link-fade fw-semibold" href={% url 'profile' user %}>u/{{ user }}</a></li></h6>
+                    <h6><li class="py-1 px-2"><a class="link-fade fw-semibold" href={% url 'logout' %}>logout</a></h6>
                     {% else %}
-                    <li><a href={% url 'login' %}>login</a></li>
-                    <li><a href={% url 'register' %}>register</a></li>
+                    <h6><li class="py-1 px-2"><a class="link-fade fw-semibold" href={% url 'login' %}>login</a></li></h6>
+                    <h6><li class="py-1 px-2"><a class="link-fade fw-semibold" href={% url 'register' %}>register</a></li></h6>
                     {% endif %}
                 </ul>
             </div>
         </header>
         <main>
-            {% block content %}
-            {% endblock %}
+            <div class="content bg-primary">
+                {% block content %}
+                {% endblock %}
+            </div>
         </main>
     </body>
 </html>

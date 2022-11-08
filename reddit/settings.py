@@ -26,14 +26,17 @@ SECRET_KEY = 'django-insecure-=r0bk4-a+u+^72x4$=b-!t))%e$bctytpks=*#xfo&@d)(h6t&
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.1.118', '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['192.168.1.121', '127.0.0.1', 'localhost']
 
 
 # Application definition
 
 INSTALLED_APPS = [
     'storages',
+    'compressor',
     'secretballot',
+    'crispy_forms',
+    'crispy_bootstrap5',
     'accounts.apps.AccountsConfig',
     'posts.apps.PostsConfig',
     'payments.apps.PaymentsConfig',
@@ -129,9 +132,22 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
+STATIC_ROOT = './assets'
+
 STATIC_URL = 'static/'
 
 STATICFILES_DIRS = [ BASE_DIR / 'assets' ]
+
+STATICFILES_FINDERS = ['compressor.finders.CompressorFinder']
+
+COMPRESS_PRECOMPILERS = (
+    ('text/x-scss', 'django_libsass.SassCompiler'),
+)
+
+COMPRESS_OFFLINE = True
+COMPRESS_ENABLED = True
+LIBSASS_OUTPUT_STYLE = 'compressed'
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
@@ -178,6 +194,8 @@ AWS_S3_SIGNATURE_VERSION = 's3v4'
 
 AWS_S3_ADDRESSING_STYLE = "virtual"
 
+AWS_PRELOAD_METADATA = True
+
 # MEDIA_URL = '/media/'
 
 # MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -185,3 +203,7 @@ AWS_S3_ADDRESSING_STYLE = "virtual"
 STRIPE_PUBLISHABLE_KEY = os.environ.get('STRIPE_PUBLISHABLE_KEY')
 STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY')
 STRIPE_ENDPOINT_SECRET = os.environ.get('STRIPE_ENDPOINT_SECRET')
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+
+CRISPY_TEMPLATE_PACK = "bootstrap5"
