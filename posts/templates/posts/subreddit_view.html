@@ -36,7 +36,32 @@
                 </span>
             </div>
         </div>
-        <div class="sidebar-right w-100"></div>
+        <div class="sidebar-right w-100">
+            <div class="container p-2 w-75" style="position: sticky; top: 48px;">
+                <div class="d-flex flex-column bg-secondary rounded border border-border p-2 pb-3  mx-2">
+                    <h4 class="mt-2 mx-2 text-wrap text-break">r/{{ subreddit.subreddit_name }}</h4>
+                    <hr/>
+                    {% if subreddit.subreddit_info %}
+                    <p class="mx-2">{{ subreddit.subreddit_info }}</p>
+                    <hr/>
+                    {% endif %}
+                    <p class="mx-2">Created by <a href={% url 'profile' subreddit.created_by %} class="link-underline text-muted">u/{{ subreddit.created_by }}</a></p>
+                    {% if subreddit.moderators.count > 1 %}
+                    <p class="mt-2 mx-2">Moderators:</p>
+                    <ul class="mb-0 mx-2">
+                        {% for moderator in subreddit.moderators.all %}
+                        {% if not moderator == subreddit.created_by %}
+                        <li><a href={% url 'profile' moderator %} class="link-underline text-muted">u/{{ moderator.username }}</a></li>
+                        {% endif %}
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                    {% if request.user == subreddit.created_by %}
+                    <button class="btn btn-secondary border border-border justify-self-center p-1 mx-2 mt-3"><a href={% url 'subreddit_edit' subreddit %} class="link-fade">edit subreddit</a></button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 

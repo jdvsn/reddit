@@ -25,13 +25,12 @@ class Post(models.Model):
     class Meta:
         ordering = ['-created_at']
         permissions = [('admin_delete_post', 'admin delete post')]
-
     id = models.AutoField(primary_key=True)
     created_by = models.ForeignKey(User, related_name='posts', on_delete=models.CASCADE)
     subreddit = models.ForeignKey(Subreddit, related_name='posts', on_delete=models.CASCADE)
     post_title = models.CharField(max_length=50)
     post_image = models.ImageField(blank=True, upload_to='posts', null=True)
-    post_body = models.TextField(max_length=500, blank=True, null=True)
+    post_body = models.TextField(max_length=1000, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     score = models.IntegerField(default=0)
     url = models.SlugField(max_length=55)
@@ -78,7 +77,7 @@ class Comment(models.Model):
     id = models.AutoField(primary_key=True)
     created_by = models.ForeignKey(User, related_name='comments', on_delete=models.CASCADE)
     post = models.ForeignKey(Post, related_name='comments', on_delete=models.CASCADE)
-    comment_text = models.TextField(max_length=500)
+    comment_text = models.TextField(max_length=1000)
     created_at = models.DateTimeField(auto_now_add=True)
     parent = models.ForeignKey('Comment', null=True, related_name='replies', on_delete=models.CASCADE)
     score = models.IntegerField(default=0)

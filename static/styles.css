@@ -11,9 +11,11 @@ h1,h2,h3,h4,h5,h6{
     font-weight: normal;
 }
 
-a, a:visited{
+a, a:visited, a:focus{
     text-decoration: none;
     color: rgb(215,218,220);
+    outline: none !important;
+    border: none !important;
 }
 
 a.link-underline:hover{
@@ -31,7 +33,7 @@ p{
 }
 
 body{ 
-    padding-top: 41px; 
+    padding-top: 43px; 
 }
 
 .posts{
@@ -45,6 +47,10 @@ div.post-info{
 
 .form-control:hover, .form-control:focus{
     box-shadow: inset 0 0 3px 1px grey;
+}
+
+.form-post-title{
+    max-height: 38px;
 }
 
 .form-post-body{

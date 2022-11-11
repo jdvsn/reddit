@@ -1,0 +1,8 @@
+post detail
+
+    delete, edit info in modal https://getbootstrap.com/docs/5.0/components/modal/#live-demo
+    collapse comment reply form with button https://getbootstrap.com/docs/5.0/components/collapse/#example
+
+everywhere
+
+    pagination https://getbootstrap.com/docs/5.0/components/pagination/

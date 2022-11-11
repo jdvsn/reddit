@@ -66,12 +66,11 @@ class PostForm(forms.ModelForm):
                 }),
             'post_title': forms.Textarea(attrs={
                 'class': 'form-control form-post-title bg-textbox border border-border text-body',
-                'cols': 68, 'rows': 1,
                 'placeholder': 'Title',
                 }),
             'post_body': forms.Textarea(attrs={
                 'class': 'form-control form-post-body bg-textbox border border-border text-body',
-                'cols': 68, 'rows': 20,
+                'rows': 20,
                 'placeholder': 'Text (optional)',
                 }),
             'post_image': forms.ClearableFileInput(attrs={

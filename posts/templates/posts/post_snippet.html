@@ -23,24 +23,23 @@
                         {% if home %}
                         to <a class="text-muted link-underline" href={% url 'subreddit' post.subreddit.url %}>r/{{ post.subreddit }}</a> 
                         {% endif %}
-                        by <a class="text-muted link-underline" href={% url 'profile' post.created_by %}>{{ post.created_by }}</a> | 
+                        by <a class="text-muted link-underline" href={% url 'profile' post.created_by %}>u/{{ post.created_by }}</a> | 
                         {{ post.comment_count }} comments
                     </small>
                 </div>
                 <div class="post-preview p-1 position-relative">
                     <a href={% url 'post_detail' post.subreddit.url post.url %} class="stretched-link"></a>
-                        <div class="post-preview-container rounded bg-secondary p-2 pt-1">
-                            <h4 class="post-title mb-2">{{ post.post_title }}</h4>
-                            {% if post.preview != None %}
-                            <p class="preview-body text-wrap text-break">{{ post.preview }}</p>
-                            {% endif %}
-                            {% if post.post_image.url != None %}
-                            <div class="img container d-flex flex-wrap justify-content-center p-0 m-0">
-                                <img class="preview-image rounded p-1" style="max-height: 600px; max-width: 600px" src={{ post.post_image.url }}>
-                            </div>
-                            {% endif %}
+                    <div class="post-preview-container rounded bg-secondary p-2 pt-1">
+                        <h4 class="post-title mb-2">{{ post.post_title }}</h4>
+                        {% if post.post_image.url != None %}
+                        <div class="container d-flex flex-wrap justify-content-center p-0 m-0">
+                            <img class="preview-image rounded p-1" style="max-height: 600px; max-width: 700px" src={{ post.post_image.url }}>
                         </div>
-                    
+                        {% endif %}
+                        {% if post.preview != None %}
+                        <p class="preview-body text-wrap text-break">{{ post.preview }}</p>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
         </div>
