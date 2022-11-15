@@ -1,52 +1,54 @@
 {% extends 'posts/base.html' %}
 
 {% block content %}
-<div class="d-flex flex-row">
-    <div class="sidebar-left p-2 w-100">
-        <div class="container p-2 w-50">
-            <div class="bg-secondary rounded border border-border p-2">
-                <h5 class="p-1">Sample sidebar text</h5>
-                <p class="p-1">Here is some body text to fill the space under my sample sidebar title.
+<div class="container">
+    <div class="row justify-content-around">
+        <div class="sidebar-left p-2 col-lg-2">
+            <div class="container p-2">
+                <div class="bg-secondary rounded border border-border p-2">
+                    <h5 class="p-1">Sample sidebar text</h5>
+                    <p class="p-1">Here is some body text to fill the space under my sample sidebar title.
+                </div>
             </div>
         </div>
-    </div>
-    <div class="posts">
-        <div class="container d-flex flex-column p-2">
-            <div class="header-container p-2">
-                <header class="sort rounded bg-post border border-border d-inline-flex justify-content-between w-100">
-                    <div class="d-inline-flex align-items-center">
-                        <a class="link-fade p-2" href={% url 'home_top' %}>top</a>
-                        <a class="link-fade p-2" href={% url 'home_new' %}>new</a>
-                    </div>
-                    <a class="link-fade p-2" href={% url 'home_submit' %}>submit</a>
-                </header>
-            </div>
-            {% for post in page_obj %}
-                {% include "posts/post_snippet.html" with post=post home=True %}
-            {% endfor %}
-            <div class="pagination">
-                <span class="step-links">
-                    {% if page_obj.paginator.num_pages > 2 %}
-                        <a href="?page=1">&laquo; first</a>
-                    {% endif %}
-                    {% if page_obj.has_previous %}
-                        <a href="?page={{ page_obj.previous_page_number }}">previous</a>
-                    {% endif %}
-                    {% if page_obj.paginator.num_pages > 1 %}
-                    <span class="current">
-                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        <div class="posts col-lg-7">
+            <div class="container d-flex flex-column p-2">
+                <div class="header-container p-2">
+                    <header class="sort rounded bg-post border border-border d-inline-flex justify-content-between w-100">
+                        <div class="d-inline-flex align-items-center">
+                            <a class="link-fade p-2" href={% url 'home_top' %}>top</a>
+                            <a class="link-fade p-2" href={% url 'home_new' %}>new</a>
+                        </div>
+                        <a class="link-fade p-2" href={% url 'home_submit' %}>submit</a>
+                    </header>
+                </div>
+                {% for post in page_obj %}
+                    {% include "posts/post_snippet.html" with post=post home=True %}
+                {% endfor %}
+                <div class="pagination">
+                    <span class="step-links">
+                        {% if page_obj.paginator.num_pages > 2 %}
+                            <a href="?page=1">&laquo; first</a>
+                        {% endif %}
+                        {% if page_obj.has_previous %}
+                            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                        {% endif %}
+                        {% if page_obj.paginator.num_pages > 1 %}
+                        <span class="current">
+                            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                        </span>
+                        {% endif %}
+                        {% if page_obj.has_next %}
+                            <a href="?page={{ page_obj.next_page_number }}">next</a>
+                        {% endif %}
+                        {% if page_obj.paginator.num_pages > 2 %}
+                            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                        {% endif %}
                     </span>
-                    {% endif %}
-                    {% if page_obj.has_next %}
-                        <a href="?page={{ page_obj.next_page_number }}">next</a>
-                    {% endif %}
-                    {% if page_obj.paginator.num_pages > 2 %}
-                        <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
-                    {% endif %}
-                </span>
+                </div>
             </div>
         </div>
+        <div class="sidebar-right col-lg-2"></div>
     </div>
-    <div class="sidebar-right w-100"></div>
 </div>
 {% endblock %}

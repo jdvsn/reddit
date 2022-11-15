@@ -1,109 +1,119 @@
 {% extends 'posts/base.html' %}
 
 {% block content %}
-<header class="subreddit">
-    <h1><a href={% url 'subreddit' post.subreddit.url %}>r/{{ post.subreddit.subreddit_name }}</a></h1>
-</header>
-<div class="post-detail">
-    <div class="the-post">
-        <div class="votes">
-            <form action={% url 'post_vote' post.subreddit.url post.url %} method="post">
-                {% csrf_token %}
-                <input type="hidden" name="vote" value="+1">
-                <input class="upvote" type="submit" value="▲">
-            </form>
-            <div class="post-score">{{ post.vote_total }}</div>
-            <form action={% url 'post_vote' post.subreddit.url post.url %} method="post">
-                {% csrf_token %}
-                <input type="hidden" name="vote" value="-1">
-                <input class="downvote" type="submit" value="▼">
-            </form>
-        </div>
-        <div>
-            <div class="postinfo">Posted by <a href={% url 'profile' post.created_by %}>{{ post.created_by }}</a> {{ post.when }}</div>
-            <div class="post-body">
-                <h2>{{ post.post_title }}</h2>
-                {% if post.post_body != '' %}
-                    <p>{{ post.post_body }}</p>
-                {% endif %}
-                {% if post.post_image.url != None %}
-                    <img class="image-detail" src={{ post.post_image.url }}>
-                {% endif %}
-            </div>
-        </div>
-        <a href={% url 'post_delete' post.subreddit.url post.url %}>delete</a>
-        {% block delete %}
-        {% endblock %}
-    </div>
-    <div class="comments">
-        <p>Comments ({{ post.comment_count }}) :</p>
-        <form action="" method="post">
-            {% csrf_token %}
-            {{ comment_form.as_p }}
-            <input type="submit" value="Submit">
-        </form>
-
-        <ul class="comment-list">
-            {% for c in post.comments.all %}
-            {% if c.parent == None %}
-            <li class="comment">
-                <p>{{ c.comment_text }}</p>
-                <div class="votes">
-                    <form action={% url 'comment_vote' post.subreddit.url post.url c.id %} method="post">
+<div class="subreddit-header d-flex position-relative bg-post w-100 pb-4 pt-3 px-5 mt-3 mb-2">
+    <a href={% url 'subreddit' post.subreddit %} class="stretched-link"></a>
+    <h1 class="display-3">r/{{ post.subreddit }}</h1>
+</div>
+<div class="row justify-content-center mt-4">
+    <div class="col-lg-6 bg-post rounded px-0">
+        <div class="post d-flex flex-row">
+            <div class="votes-container">
+                <div class="votes d-flex flex-column">
+                    <form action={% url 'post_vote' post.subreddit.url post.url %} method="post">
                         {% csrf_token %}
                         <input type="hidden" name="vote" value="+1">
-                        <input class="upvote" type="submit" value="▲">
+                        <input class="upvote btn btn-sm btn-vote btn-outline-*" type="submit" value="▲">
                     </form>
-                    <form action={% url 'comment_vote' post.subreddit.url post.url c.id %} method="post">
+                    <div style="color: #D7DADC" class="score mx-auto">{{ post.vote_total }}</div>
+                    <form class="m-w-100" action={% url 'post_vote' post.subreddit.url post.url %} method="post">
                         {% csrf_token %}
                         <input type="hidden" name="vote" value="-1">
-                        <input class="downvote" type="submit" value="▼">
+                        <input class="downvote btn btn-sm btn-vote btn-outline-*" type="submit" value="▼">
                     </form>
                 </div>
-                <details>
-                    <summary>
-                        Reply | 
-                        {{ c.vote_total }} points | 
-                        {{ c.when }} 
-                        by <a href={% url 'profile' c.created_by %}>{{ c.created_by }}</a> 
-                        <a href={% url 'comment_delete' post.subreddit.url post.url c.id %}>delete</a>
-                    </summary>
-                    <form action="" method="post">
-                        {% csrf_token %}
-                        {{ comment_form.as_p }}
-                        <input type="hidden" name="parent_id" value="{{ c.id }}">
-                        <button class="btn btn-primary mt-md-1" type="submit" value="Reply">Reply</button>
-                    </form>
-                </details>
-            </li>
-            {% if c.replies.all %}
-            <ul class="comment-replies">
-                {% for cr in c.replies.all %}  
-                <li class="comment-reply">
-                    <p> {{ cr.comment_text }}</p>
-                    <div class="votes">
-                        <form action={% url 'comment_vote' post.subreddit.url post.url cr.id %} method="post">
-                            {% csrf_token %}
-                            <input type="hidden" name="vote" value="+1">
-                            <input class="upvote" type="submit" value="▲">
-                        </form>
-                        <form action={% url 'comment_vote' post.subreddit.url post.url cr.id %} method="post">
-                            {% csrf_token %}
-                            <input type="hidden" name="vote" value="-1">
-                            <input class="downvote" type="submit" value="▼">
-                        </form>
+            </div>
+            <div class="post-details w-100 mt-1 pe-3">
+                <div class="post-details container d-flex flex-column p-0 m-0">
+                    <div class="post-info">
+                        <small class="text-muted">
+                        posted {{ post.when }} 
+                        by <a class="text-muted link-underline" href={% url 'profile' post.created_by %}>{{ post.created_by }}</a>
+                        </small>
                     </div>
-                    {{ cr.vote_total }} points | 
-                    {{ cr.when }} 
-                    by <a href={% url 'profile' cr.created_by %}>{{ cr.created_by }}</a> 
-                    <a href={% url 'comment_delete' post.subreddit.url post.url cr.id %}>delete</a>
-                </li>
-                {% endfor %}  
-            </ul>
+                    <div class="post-body ms-1 px-1 pt-1">
+                        <h4 class="mb-1">{{ post.post_title }}</h4>
+                        {% if post.post_image.url != None %}
+                            <img class="image-detail img-fluid align-self-center rounded p-1 pe-5" src={{ post.post_image.url }}>
+                        {% endif %}
+                        {% if post.post_body != '' %}
+                            <p class="text-wrap text-break pb-1 fw-light">{{ post.post_body }}</p>
+                        {% endif %}
+                    </div>
+                    <div class="d-inline-flex px-1">
+                        <div class="px-1 text-muted fw-semibold">
+                            <small>{{ post.comment_count }} comments</small>
+                        </div>
+                        <div class="px-1">
+                            <small><a class="link-underline text-muted fw-semibold" href={% url 'awards_send' %}>award</a></small>
+                        </div>
+                        {% if request.user == post.created_by %}
+                        <div class="px-1">
+                            <small>
+                            <a class="link-underline text-muted fw-semibold" href={% url 'post_delete' post.subreddit.url post.url %}>delete</a>
+                            {% block delete %}
+                            {% endblock %}
+                            </small>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr class="mx-3 mt-2"/>
+        <div class="comments pb-3 px-3 w-100">
+            <div class="px-4">
+                <form action="" method="post">
+                    {% csrf_token %}
+                    {{ comment_form }}
+                    <input type="submit" value="send" class="btn btn-textbox border m-0 mt-2 p-0 px-2 border-border text-muted fw-semibold" style="border-radius: 3px">
+                </form>
+            </div>
+            {% if post.comment_count > 1 %}
+                <div class="comment-list">
+                    {% for c in comments %}
+                        <div id="infoComment{{ c.id }}" style="display: none">    
+                            <small class="d-inline-flex pe-2 py-2">
+                                <div class="mx-2 fw-semibold" id="showComment{{ c.id }}" style="cursor: pointer" onclick="showComment(id)">+</div>
+                                <a href={% url 'profile' c.created_by %} class="fw-semibold link-underline me-1">{{ c.created_by }}</a>
+                                <div class="text-muted">· {{ c.when }}</div>
+                            </small>
+                        </div>
+                        <div class="d-flex flex-row">
+                            <div id="hideComment{{ c.id }}" class="p-2 py-3 h-auto" style="cursor: pointer" onclick="hideComment(id)">
+                                <div class="vr h-100"></div>
+                            </div>
+                            <div id="comment{{ c.id }}">
+                                <div class="d-flex flex-column p-2 mx-1">
+                                    {% include "posts/comment_snippet.html" with c=c %}
+                                    {% if c.replies.all %}
+                                        <div class="comment-replies ms-2">
+                                            {% for cr in c.replies.all %}
+                                                <div id="infoComment{{ cr.id }}" style="display: none">    
+                                                    <small class="d-inline-flex pt-1">
+                                                        <div class="mx-2 fw-semibold" id="showComment{{ cr.id }}" style="cursor: pointer" onclick="showComment(id)">+</div>
+                                                        <a href={% url 'profile' cr.created_by %} class="fw-semibold link-underline me-1">{{ cr.created_by }}</a>
+                                                        <div class="text-muted">· {{ cr.when }}</div>
+                                                    </small>
+                                                </div>  
+                                                <div class="d-flex flex-row p-1">
+                                                    <div id="hideComment{{ cr.id }}" class="p-2 py-2 me-2 h-auto" style="cursor: pointer" onclick="hideComment(id)">
+                                                        <div class="vr h-100"></div>
+                                                    </div>
+                                                    <div id="comment{{ cr.id }}">
+                                                        {% include "posts/comment_snippet.html" with c=cr %}
+                                                    </div>
+                                                </div>
+                                            {% endfor %}  
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
             {% endif %}
-            {% endif %}
-            {% endfor %}
-        </ul>
+        </div>
     </div>
 </div>
 {% endblock %}

@@ -1,0 +1,39 @@
+<div class="comment d-flex flex-column">
+    <div>
+        <small class="d-inline-flex">
+            <a href={% url 'profile' c.created_by %} class="fw-semibold link-underline me-1">{{ c.created_by }}</a>
+            <div class="text-muted">· {{ c.when }}</div>
+        </small>
+    </div>
+    <p class="fw-light">{{ c.comment_text }}</p>
+    <div class="d-inline-flex">
+        <form action={% url 'comment_vote' post.subreddit.url post.url c.id %} method="post">
+            {% csrf_token %}
+            <input type="hidden" name="vote" value="+1">
+            <input class="upvote btn btn-sm btn-vote btn-outline-* p-0 pe-1" type="submit" value="▲">
+        </form>
+        {{ c.vote_total }} 
+        <form action={% url 'comment_vote' post.subreddit.url post.url c.id %} method="post">
+            {% csrf_token %}
+            <input type="hidden" name="vote" value="-1">
+            <input class="downvote btn btn-sm btn-vote btn-outline-* p-0 px-1" type="submit" value="▼">
+        </form>
+        <small><div class="pe-1 text-muted fw-semibold" style="cursor: pointer" data-bs-toggle="collapse" data-bs-target="#replyForm{{ c.id }}" aria-expanded="false" aria-controls="replyForm{{ c.id }}">reply</div></small>
+        {% if request.user == c.created_by %}
+            <small><a class="text-muted fw-semibold" href={% url 'comment_delete' post.subreddit.url post.url c.id %}>delete</a></small>
+        {% endif %}
+    </div>
+    <div class="collapse" id="replyForm{{ c.id }}">
+        <form action="" method="post">
+            {% csrf_token %}
+            {{ comment_form }}
+            {% if not c.parent %}
+                <input type="hidden" name="parent_id" value="{{ c.id }}">
+            {% elif c.parent %}
+                <input type="hidden" name="parent_id" value="{{ c.parent.id }}">
+            {% endif %}
+            <button type="submit" class="btn btn-textbox border m-0 mt-2 p-0 px-2 pb-0 border-border text-muted fw-semibold" style="border-radius: 3px">reply</button>
+            <button type="button" class="btn btn-textbox border m-0 mt-2 p-0 px-2 pb-0 border-border text-muted fw-semibold" style="border-radius: 3px" data-bs-toggle="collapse" data-bs-target="#replyForm{{ c.id }}" aria-expanded="false" aria-controls="replyForm{{ c.id }}">cancel</button>
+        </form>
+    </div>
+</div>

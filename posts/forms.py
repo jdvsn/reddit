@@ -92,7 +92,8 @@ class CommentForm(forms.ModelForm):
         fields = ['comment_text']
         labels = {'comment_text': ''}
         widgets = {'comment_text': forms.Textarea(attrs={
-                    'cols': 125, 'rows': 4,
+                    'class': 'form-control comment-form bg-post border border-border text-body w-100',
+                    'rows': 4,
                     'placeholder': 'Add a comment:'
                     })
         }

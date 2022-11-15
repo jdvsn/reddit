@@ -92,3 +92,23 @@ function readURL(input) {
       reader.readAsDataURL(input.files[0]);
     }
   }
+
+function hideComment(id) {
+    var id = id.slice(11);
+    var comment = document.getElementById('comment' + id);
+    var info = document.getElementById('infoComment' + id);
+    var collapse = document.getElementById('hideComment' + id)
+    comment.style.display = "none";
+    info.style.display = "block";
+    collapse.style.display = "none";
+}
+
+function showComment(id) {
+    var id = id.slice(11);
+    var comment = document.getElementById('comment' + id);
+    var info = document.getElementById('infoComment' + id);
+    var collapse = document.getElementById('hideComment' + id);
+    comment.style.display = "block";
+    info.style.display = "none";
+    collapse.style.display = "block";
+}

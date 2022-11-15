@@ -98,7 +98,7 @@ def post_create(request, subreddit_url):
 
 def post_detail(request, post_url, subreddit_url):
     post = get_object_or_404(Post, url=post_url)
-    comments = post.comments.all()
+    comments = post.comments.filter(parent=None)
     if request.method == 'POST':
         comment_form = CommentForm(data=request.POST)
         if not request.user.is_authenticated:

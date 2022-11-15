@@ -1,6 +1,6 @@
 
 /*------------------------------------
-- COLOR background
+- COLOR primary
 ------------------------------------*/
 .alert-primary {
     color: #000000;
@@ -717,4 +717,3 @@ button.bg-border:focus {
 a.text-border:hover, a.text-border:focus {
     color: #1a1b1c !important;
 }
-

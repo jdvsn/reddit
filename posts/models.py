@@ -72,7 +72,7 @@ class Post(models.Model):
     
 class Comment(models.Model):
     class Meta:
-        ordering = ['-created_at']
+        ordering = ['created_at']
         permissions = [('admin_delete_comment', 'admin delete comment')]
     id = models.AutoField(primary_key=True)
     created_by = models.ForeignKey(User, related_name='comments', on_delete=models.CASCADE)

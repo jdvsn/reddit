@@ -21,7 +21,7 @@
         <link rel="icon" type="image/png" sizes="16x16" href="{% static 'favicon/favicon-16x16.png' %}">
         <link rel="manifest" href="{% static 'favicon/site.webmanifest' %}">
     </head>
-    <body>
+    <body class="bg-primary">
         <header class="navbar border-bottom border-border bg-secondary fixed-top d-flex flex-nowrap justify-content-center p-0 m-0">
             <div class="w-100 d-flex justify-content-start">
                 <ul class="nav p-2">
@@ -47,7 +47,7 @@
                 </ul>
             </div>
         </header>
-        <div class="content bg-primary">
+        <div class="content">
             {% block content %}
             {% endblock %}
         </div>

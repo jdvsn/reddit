@@ -36,11 +36,6 @@ body{
     padding-top: 43px; 
 }
 
-.posts{
-    min-width: 800px;
-    max-width: 800px;
-}
-
 div.post-info{
     margin-left: 10px;
 }
@@ -54,28 +49,33 @@ div.post-info{
 }
 
 .form-post-body{
-    border-radius: 0px 0px 8px 8px;
+    border-radius: 0 0 8px 8px;
 }
 
 .form-post-image{
     padding: 6px;
-    border-radius: 0px 0px 8px 8px;
+    border-radius: 0 0 8px 8px;
+}
+
+.comment-form{
+    padding: 6px;
+    border-radius: 3px;
 }
 
 #image-tab{
-    border-radius: 0px 8px 0px 0px;
+    border-radius: 0 8px 0 0;
     border-color: #4b4d4e;
     border-width: 1px 1px 0 0;
 }
 
 #text-tab{
-    border-radius: 8px 0px 0px 0px;
+    border-radius: 8px 0 0 0;
     border-color: #4b4d4e;
     border-width: 1px 1px 0 1px;
 }
 
 #image-tab.active,#text-tab.active{
-    box-shadow: inset 0 -2px 0px 0px grey;
+    box-shadow: inset 0 -2px 0 0 grey;
 }
 
 #image-tab:hover,#text-tab:hover{
