@@ -1,0 +1,25 @@
+<div class="px-1">
+    <small>
+        <a class="link-underline text-muted fw-semibold" style="cursor: pointer" data-bs-toggle="modal" data-bs-target="#postDelete">delete</a>
+    </small>
+</div>
+<div class="modal fade" id="postDelete" tabindex="-1" aria-labelledby="postDeleteLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-textbox">
+            <div class="modal-header border-border">
+                <h5 class="modal-title" id="postDeleteLabel">Delete Post</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete this post?
+            </div>
+            <div class="modal-footer border-border">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form action={% url 'post_delete' post.subreddit.url post.url %} method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

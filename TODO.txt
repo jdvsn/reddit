@@ -1,8 +1,8 @@
-post detail
 
-    delete, edit info in modal https://getbootstrap.com/docs/5.0/components/modal/#live-demo
-    js voting
 
-everywhere
+edit subreddit info in modal https://getbootstrap.com/docs/5.0/components/modal/#live-demo
+    
 
-    pagination https://getbootstrap.com/docs/5.0/components/pagination/
+js voting
+pagination https://getbootstrap.com/docs/5.0/components/pagination/
+email

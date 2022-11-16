@@ -1,0 +1,23 @@
+<small>
+    <a class="link-underline text-muted fw-semibold" style="cursor: pointer" data-bs-toggle="modal" data-bs-target="#comment{{ c.id }}Delete">delete</a>
+</small>
+<div class="modal fade" id="comment{{ c.id }}Delete" tabindex="-1" aria-labelledby="comment{{ c.id }}DeleteLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-textbox">
+            <div class="modal-header border-border">
+                <h5 class="modal-title" id="comment{{ c.id }}DeleteLabel">Delete comment by {{ c.created_by }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body fw-light">
+                {{ c.comment_text }}
+            </div>
+            <div class="modal-footer border-border">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form action={% url 'comment_delete' post.subreddit.url post.url c.id %} method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

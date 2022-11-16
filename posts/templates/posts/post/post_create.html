@@ -17,7 +17,7 @@
             <form class="post-create-form d-flex flex-column p-1 mx-auto" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="row">
-                    <div class="col-5">
+                    <div style="max-width: 200px">
                         <div class="input-group pt-2 pb-3">
                             {{ form.subreddit.errors}}
                             <label class="input-group-text bg-textbox text-body border border-border" for="id_subreddit">r/</label>

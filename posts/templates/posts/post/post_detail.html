@@ -5,7 +5,7 @@
     <a href={% url 'subreddit' post.subreddit %} class="stretched-link"></a>
     <h1 class="display-3">r/{{ post.subreddit }}</h1>
 </div>
-<div class="row justify-content-center mt-4">
+<div class="row justify-content-center my-4">
     <div class="col-lg-6 bg-post rounded px-0">
         <div class="post d-flex flex-row">
             <div class="votes-container">
@@ -16,7 +16,7 @@
                         <input class="upvote btn btn-sm btn-vote btn-outline-*" type="submit" value="▲">
                     </form>
                     <div style="color: #D7DADC" class="score mx-auto">{{ post.vote_total }}</div>
-                    <form class="m-w-100" action={% url 'post_vote' post.subreddit.url post.url %} method="post">
+                    <form action={% url 'post_vote' post.subreddit.url post.url %} method="post">
                         {% csrf_token %}
                         <input type="hidden" name="vote" value="-1">
                         <input class="downvote btn btn-sm btn-vote btn-outline-*" type="submit" value="▼">
@@ -47,14 +47,8 @@
                         <div class="px-1">
                             <small><a class="link-underline text-muted fw-semibold" href={% url 'awards_send' %}>award</a></small>
                         </div>
-                        {% if request.user == post.created_by %}
-                        <div class="px-1">
-                            <small>
-                            <a class="link-underline text-muted fw-semibold" href={% url 'post_delete' post.subreddit.url post.url %}>delete</a>
-                            {% block delete %}
-                            {% endblock %}
-                            </small>
-                        </div>
+                        {% if can_delete_post %}
+                            {% include "posts/post/post_delete.html" %}
                         {% endif %}
                     </div>
                 </div>
@@ -69,8 +63,8 @@
                     <input type="submit" value="send" class="btn btn-textbox border m-0 mt-2 p-0 px-2 border-border text-muted fw-semibold" style="border-radius: 3px">
                 </form>
             </div>
-            {% if post.comment_count > 1 %}
-                <div class="comment-list">
+            {% if post.comment_count > 0 %}
+                <div class="comment-list mt-2">
                     {% for c in comments %}
                         <div id="infoComment{{ c.id }}" style="display: none">    
                             <small class="d-inline-flex pe-2 py-2">
@@ -85,7 +79,7 @@
                             </div>
                             <div id="comment{{ c.id }}">
                                 <div class="d-flex flex-column p-2 mx-1">
-                                    {% include "posts/comment_snippet.html" with c=c %}
+                                    {% include "posts/comment/comment_snippet.html" %}
                                     {% if c.replies.all %}
                                         <div class="comment-replies ms-2">
                                             {% for cr in c.replies.all %}
@@ -101,7 +95,7 @@
                                                         <div class="vr h-100"></div>
                                                     </div>
                                                     <div id="comment{{ cr.id }}">
-                                                        {% include "posts/comment_snippet.html" with c=cr %}
+                                                        {% include "posts/comment/comment_snippet.html" with c=cr %}
                                                     </div>
                                                 </div>
                                             {% endfor %}  

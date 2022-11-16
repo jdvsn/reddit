@@ -19,8 +19,8 @@
             <input class="downvote btn btn-sm btn-vote btn-outline-* p-0 px-1" type="submit" value="▼">
         </form>
         <small><div class="pe-1 text-muted fw-semibold" style="cursor: pointer" data-bs-toggle="collapse" data-bs-target="#replyForm{{ c.id }}" aria-expanded="false" aria-controls="replyForm{{ c.id }}">reply</div></small>
-        {% if request.user == c.created_by %}
-            <small><a class="text-muted fw-semibold" href={% url 'comment_delete' post.subreddit.url post.url c.id %}>delete</a></small>
+        {% if can_delete_comments or c.created_by == request.user %}
+            {% include "posts/comment/comment_delete.html" %}
         {% endif %}
     </div>
     <div class="collapse" id="replyForm{{ c.id }}">

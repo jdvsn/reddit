@@ -17,7 +17,7 @@
                     </header>
                 </div>
                 {% for post in page_obj %}
-                    {% include "posts/post_snippet.html" with post=post %}
+                    {% include "posts/post/post_snippet.html" %}
                 {% endfor %}
                 <div class="pagination">
                     <span class="step-links">

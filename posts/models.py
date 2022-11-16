@@ -63,6 +63,14 @@ class Post(models.Model):
         else:
             return False
 
+    def can_delete_comments(self, user):
+        if user in self.subreddit.moderators.all():
+            return True
+        elif user.has_perm('posts.admin_delete_comment'):
+            return True
+        else:
+            return False
+
     def save(self, *args, **kwargs):
         self.url = slugify('%s-%s' % (get_random_string(4, '123456789'), self.post_title))
         super(Post, self).save(*args, **kwargs)
@@ -79,7 +87,7 @@ class Comment(models.Model):
     post = models.ForeignKey(Post, related_name='comments', on_delete=models.CASCADE)
     comment_text = models.TextField(max_length=1000)
     created_at = models.DateTimeField(auto_now_add=True)
-    parent = models.ForeignKey('Comment', null=True, related_name='replies', on_delete=models.CASCADE)
+    parent = models.ForeignKey('Comment', null=True, related_name='replies', on_delete=models.SET_NULL)
     score = models.IntegerField(default=0)
         
     def type(self):
