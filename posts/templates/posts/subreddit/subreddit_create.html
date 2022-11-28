@@ -1,12 +1,15 @@
 {% extends 'posts/base.html' %}
 
 {% block content %}
-<a href={% url 'subreddit_index' %}>back to subreddits</a>
-<form class="subreddit-create-form" action={% url 'subreddit_create' %} method="post">
-    {% csrf_token %}
-        <table>
-        {{ form.as_table }}
-        </table>
-    <input type="submit" name="submit" value="Submit">
-</form>
+{% load crispy_forms_tags %}
+<div class="container">
+    <div class="d-flex flex-column p-2 m-auto my-4 bg-secondary border border-border rounded" style="max-width: 500px">
+        <h5 class="fw-semibold m-auto mb-3">Create a Subreddit</h5>
+        <form class="subreddit-create-form d-flex flex-column" action={% url 'subreddit_create' %} method="post">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <input class="btn btn-secondary p-2 m-1 border border-border" type="submit" name="submit" value="Submit">
+        </form>
+    </div>
+</div>
 {% endblock %}

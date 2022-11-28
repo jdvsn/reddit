@@ -1,5 +1,3 @@
-console.log("Sanity check!");
-
 // Get Stripe publishable key
 fetch("/payments/config/")
 .then((result) => { return result.json(); })
@@ -112,3 +110,5 @@ function showComment(id) {
     info.style.display = "none";
     collapse.style.display = "block";
 }
+
+document.addEventListener

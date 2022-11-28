@@ -1,0 +1,35 @@
+{% extends 'posts/base.html' %}
+
+{% block content %}
+{% load crispy_forms_tags %}
+<div class="container d-flex justify-content-center">
+    <div class="d-flex flex-column bg-secondary border border-border mt-4 p-2 rounded">
+        <a class="text-muted link-underline" href={% url 'subreddit' subreddit.url %}>back to r/{{ subreddit }}</a>
+        {% if not can_edit %}
+        <p>You cannot edit this subreddit</p>
+        {% elif can_edit %}
+        <h5 class="py-1 m-auto">Editing r/{{ subreddit }}</h5>
+        <div>
+            <h6 class="p-1 m-auto fw-semibold">Moderators</h6>
+                {% for moderator in subreddit.moderators.all %}
+                    {% if not moderator == subreddit.created_by %}
+                    <div id="user{{ moderator.id }}" class="d-flex flex-row align-content-center justify-content-between p-1 mt-1 mx-1 border border-border">
+                        <a href={% url 'profile' moderator %} class="mx-1 link-fade fw-semibold">{{ moderator }}</a>
+                        <form class="d-flex" action={% url 'subreddit_edit_moderators' subreddit.url %} method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="remove" value="{{ moderator.id }}">
+                            <button type="submit" class="btn-close btn-close-white align-self-center"></button>
+                        </form>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            <form class="d-inline-flex" action={% url 'subreddit_edit_moderators' subreddit.url %} method="post">
+                {% csrf_token %}
+                <div class="p-1">{{ form.new_moderator }}</div>
+                <input class="btn btn-textbox p-0 px-1 pb-1 m-1 border border-border" type="submit" name="submit" value="add">
+            </form>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

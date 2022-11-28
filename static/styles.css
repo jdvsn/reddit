@@ -18,12 +18,28 @@ a, a:visited, a:focus{
     border: none !important;
 }
 
-a.link-underline:hover{
+.link-underline:hover{
     text-decoration: underline;
+    cursor: pointer;
  }
 
-a.link-fade:hover{
+.link-fade:hover{
     color:grey;
+    cursor: pointer;
+}
+
+.upvote:hover{
+    color: rgb(73, 79, 175);
+    cursor: pointer;
+}
+
+.downvote:hover{
+    color: rgb(189, 46, 46);
+    cursor: pointer;
+}
+
+.hide-comment:hover, .hide-comment:hover .vr{
+    color: red;
 }
 
 p{
@@ -33,7 +49,7 @@ p{
 }
 
 body{ 
-    padding-top: 43px; 
+    padding-top: 52px; 
 }
 
 div.post-info{
@@ -81,6 +97,15 @@ div.post-info{
 #image-tab:hover,#text-tab:hover{
     box-shadow: inset 0 0 3px 1px grey;
 }
+
+.nav-link h6{
+    color: rgb(107,116,124)
+}
+
+.nav-link.active h6{
+    color: rgb(215,218,220);
+}
+
 
 hr{
     border-color: #4b4d4e;

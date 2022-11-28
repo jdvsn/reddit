@@ -3,13 +3,13 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth.models import User
-from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from itertools import chain
 from operator import attrgetter
 
 from .models import Subreddit, Post, Comment
-from .forms import SubredditForm, PostForm, CommentForm, SubredditEditForm
+from .forms import SubredditForm, PostForm, CommentForm, SubredditEditInfoForm, SubredditEditModeratorsForm
 from awards.models import Award
 
 class SubredditIndexView(generic.ListView):
@@ -51,33 +51,41 @@ def subreddit_create(request):
     return render(request, 'posts/subreddit/subreddit_create.html', {'form': form})
 
 @login_required(login_url='/login/')
-def subreddit_edit(request, subreddit_url):
+def subreddit_edit_info(request, subreddit_url):
     subreddit = Subreddit.objects.get(url=subreddit_url)
     if request.user == subreddit.created_by:
         can_edit = True
         if request.method == 'POST':
-            form = SubredditEditForm(request.POST, instance=subreddit)
+            form = SubredditEditInfoForm(request.POST, instance=subreddit)
             if form.is_valid():
-                try:
-                    new_moderator = form.cleaned_data['new_moderator']
-                except:
-                    new_moderator = None
-                try:
-                    remove_moderator = form.cleaned_data['remove_moderator']
-                except:
-                    remove_moderator = None
-                if new_moderator:
-                    subreddit.moderators.add(new_moderator)
-                if remove_moderator:
-                    subreddit.moderators.remove(remove_moderator)
                 subreddit.save(update_fields=['subreddit_info'])
                 return HttpResponseRedirect(reverse('subreddit', args=[subreddit_url]))
         else:
-            form = SubredditEditForm(instance=subreddit)
+            form = SubredditEditInfoForm(instance=subreddit)
     else:
         can_edit = False
         form = None
-    return render(request, 'posts/subreddit/subreddit_edit.html', {'form': form, 'subreddit': subreddit, 'can_edit': can_edit})
+    return render(request, 'posts/subreddit/subreddit_edit_info.html', {'form': form, 'subreddit': subreddit, 'can_edit': can_edit})
+
+@login_required(login_url='/login/')
+def subreddit_edit_moderators(request, subreddit_url):
+    subreddit = Subreddit.objects.get(url=subreddit_url)
+    if request.user == subreddit.created_by:
+        can_edit = True
+        if request.method == 'POST':
+            remove_id = request.POST.get('remove')
+            if remove_id:
+                subreddit.moderators.remove(remove_id)
+                return HttpResponseRedirect('')
+            form = SubredditEditModeratorsForm(request.POST)
+            if form.is_valid():
+                subreddit.moderators.add(form.cleaned_data['new_moderator'])
+                return HttpResponseRedirect('')
+        else:
+            form = SubredditEditModeratorsForm()
+    else:
+        can_edit = False
+    return render(request, 'posts/subreddit/subreddit_edit_moderators.html', {'form': form, 'subreddit': subreddit, 'can_edit': can_edit})
 
 @login_required(login_url='/login/')
 def post_create(request, subreddit_url):
@@ -96,8 +104,12 @@ def post_create(request, subreddit_url):
         form = PostForm(subreddit=subreddit)
     return render(request, 'posts/post/post_create.html', {'form': form, 'subreddit': subreddit})
 
-def post_detail(request, post_url, subreddit_url):
+def post_detail(request, subreddit_url, post_url, comment_id):
     post = get_object_or_404(Post, url=post_url)
+    if comment_id:
+        comment = Comment.objects.get(id=comment_id)
+    else:
+        comment = None
     if request.method == 'POST':
         comment_form = CommentForm(data=request.POST)
         if not request.user.is_authenticated:
@@ -119,6 +131,7 @@ def post_detail(request, post_url, subreddit_url):
         comment_form = CommentForm()
     return render(request, 'posts/post/post_detail.html', {
         'post': post, 
+        'comment': comment,
         'comments': post.comments.filter(parent=None), 
         'comment_form': comment_form, 
         'can_delete_post': post.can_delete(request.user),
@@ -152,15 +165,6 @@ def vote(request, subreddit_url, post_url, comment_id):
     if request.META.get('HTTP_REFERER') != None:
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     return HttpResponseRedirect('')
-
-def comment_view(request, post_url, subreddit_url, comment_id):
-    comment = get_object_or_404(Comment, id=comment_id)
-    post = Post.objects.get(id=comment.post.id)
-    if comment.parent:
-        parent = Comment.objects.get(id=comment.parent.id)
-    else:
-        parent = None
-    return render(request, 'posts/comment/comment_view.html', {'post': post, 'comment': comment, 'parent': parent})
 
 @login_required(login_url='/login/')
 def comment_delete(request, post_url, subreddit_url, comment_id):
@@ -206,9 +210,8 @@ def profile_view(request, user, show_posts, show_comments, filter):
 
 @login_required(login_url='/login/')
 def notifications_view(request):
-    user = request.user
-    posts = user.posts.all()
-    comments = user.comments.all()
+    posts = request.user.posts.all()
+    comments = request.user.comments.all()
     post_replies = []
     comment_replies = []
     for p in posts:
@@ -219,5 +222,5 @@ def notifications_view(request):
         for cr in c.replies.all():
             comment_replies.append(cr)
     comment_replies = sorted(comment_replies, key=attrgetter('created_at'), reverse=True)
-    both = sorted(chain(list(post_replies), list(comment_replies)), key=attrgetter('created_at'), reverse=True)
-    return render(request, 'posts/notifications.html', {'user': user, 'post_replies': post_replies, 'comment_replies': comment_replies, 'both': both})
+    replies = sorted(chain(list(post_replies), list(comment_replies)), key=attrgetter('created_at'), reverse=True)
+    return render(request, 'posts/notifications.html', {'replies': replies})

@@ -1,13 +1,15 @@
 {% extends 'messages/base.html' %}
 
 {% block messages %}
-<h2>send a new message</h2>
-<form class="message-create-form" action={% url 'messages_create'%} method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    <table>
-    {{ form.as_table }}
-    </table>
-    <input type="submit" name="submit" value="Submit">
-</form>
-
+{% load crispy_forms_tags %}
+<div class="container">
+    <div class="d-flex flex-column m-auto bg-secondary">
+        <h5 class="fw-semibold m-auto mb-3">Send a Message</h5>
+        <form class="subreddit-create-form d-flex flex-column" action={% url 'messages_create' %} method="post">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <input class="btn btn-secondary mb-3 border border-border" type="submit" name="submit" value="Submit">
+        </form>
+    </div>
+</div>
 {% endblock %}

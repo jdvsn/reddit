@@ -1,0 +1,18 @@
+<div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content bg-secondary border border-border">
+            <div class="modal-body">
+                <div class="d-flex flex-column justify-content-between p-2 m-auto rounded">
+                    <button type="button" class="btn-close align-self-end" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h5 class="fw-semibold m-auto mb-3">Create an account</h5>
+                    <form class="user-form d-flex flex-column" action={% url 'register' %} method="post">  
+                        {% csrf_token %}
+                        {% load crispy_forms_tags %}  
+                        {{ user_form|crispy }}
+                        <input class="btn btn-secondary py-1 px-2 mx-auto mt-2 border border-border" type="submit" name="submit" value="Register">
+                    </form> 
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

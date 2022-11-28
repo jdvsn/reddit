@@ -10,6 +10,8 @@ $custom-colors: (
     'post': #161617,
     'border': #343536,
     'textbox': #272729,
+    'accent': #431010,
+    'error': #db3544
 );
 
 $theme-colors: map-merge($theme-colors, $custom-colors);

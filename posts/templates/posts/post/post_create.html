@@ -19,7 +19,7 @@
                 <div class="row">
                     <div style="max-width: 200px">
                         <div class="input-group pt-2 pb-3">
-                            {{ form.subreddit.errors}}
+                            {{ form.subreddit.errors }}
                             <label class="input-group-text bg-textbox text-body border border-border" for="id_subreddit">r/</label>
                             {{ form.subreddit }}
                         </div>
@@ -31,10 +31,10 @@
                 </div>
                 <ul class="nav nav-tabs nav-justified" id="postTab" role="tablist">
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link active bg-textbox border-border" id="text-tab" data-bs-toggle="tab" data-bs-target="#text" type="button" role="tab" aria-controls="text" aria-selected="true"><h6 class="fw-semibold">Text</h6></button>
+                        <button class="nav-link active bg-textbox border-border" id="text-tab" data-bs-toggle="tab" data-bs-target="#text" type="button" role="tab" aria-controls="text" aria-selected="true"><h6 class="fw-semibold"><svg width="30" height="30" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z" /></svg> Text</h6></button>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link bg-textbox border-border" id="image-tab" data-bs-toggle="tab" data-bs-target="#image" type="button" role="tab" aria-controls="image" aria-selected="false"><h6 class="fw-semibold">Image</h6></button>
+                        <button class="nav-link bg-textbox border-border" id="image-tab" data-bs-toggle="tab" data-bs-target="#image" type="button" role="tab" aria-controls="image" aria-selected="false"><h6 class="fw-semibold"><svg width="30" height="30" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" /></svg> Image</h6></button>
                     </li>
                 </ul>
                 <div class="tab-content" id="postTabContent">
@@ -44,6 +44,7 @@
                     </div>
                     <div class="tab-pane fade pb-3" id="image" role="tabpanel" aria-labelledby="image-tab">
                         <div class="file-droppable d-flex flex-column justify-content-center w-100 h-100">
+                            <svg class="align-self-center text-muted" xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="--darkreader-inline-stroke: currentColor;" data-darkreader-inline-stroke=""><path d="M20 10V7.5L14.5 2H6a2 2 0 0 0-2 2v16c0 1.1.9 2 2 2h4.5"></path><polyline points="14 2 14 8 20 8"></polyline><path d="M16 22a2 2 0 0 1-2-2"></path><path d="M20 22a2 2 0 0 0 2-2"></path><path d="M20 14a2 2 0 0 1 2 2"></path><path d="M16 14a2 2 0 0 0-2 2"></path></svg>
                             <div class="align-self-center"><p class="text-muted">Drag and drop image or click to browse</p></div>
                             <span>&times;</span>
                             {{ form.post_image.errors }}

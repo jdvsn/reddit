@@ -1,0 +1,24 @@
+{% extends 'posts/base.html' %}
+
+{% block content %}
+{% load crispy_forms_tags %}
+<div class="container d-flex justify-content-center">
+    <div class="d-flex flex-column bg-secondary border border-border mt-4 p-2 rounded">
+        <a class="text-muted link-underline" href={% url 'subreddit' subreddit.url %}>back to r/{{ subreddit }}</a>
+        {% if not can_edit %}
+        <p>You cannot edit this subreddit</p>
+        {% elif can_edit %}
+        <h5 class="py-1">Editing r/{{ subreddit }}</h5>
+        <form class="subreddit-edit-form d-flex flex-column p-2" action={% url 'subreddit_edit_info' subreddit.url %} method="post">
+            {% csrf_token %}
+            <div class="d-flex flex-column">
+                <h6 class="p-1 m-auto fw-semibold">Info</h6>
+                <div class="p-1">{{ form.subreddit_info }}</div>
+                <input type="hidden" name=form value="info" class="">
+                <input class="btn btn-textbox p-0 pb-1 m-1 border border-border" type="submit" name="submit" value="save">
+            </div>
+        </form>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

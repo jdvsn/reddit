@@ -8,8 +8,18 @@ class MessageForm(ModelForm):
     class Meta:
         model = Message
         fields = ['message_text']
+        labels = {
+            'recipient': (''),
+            'message_text': (''),
+        }
+        widgets = {
+            'message_text': forms.Textarea(attrs={
+                'placeholder': 'Message',
+                'class': 'form-control bg-textbox border border-border text-body',
+            })
+        }
 
-    recipient = forms.CharField(max_length=20)
+    recipient = forms.CharField(max_length=20, label=(''), widget=forms.TextInput(attrs={'placeholder': 'Recipient','class': 'form-control bg-textbox border border-border text-body'}))
 
     def clean_recipient(self):
         recipient_user = self.cleaned_data['recipient']

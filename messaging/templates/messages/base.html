@@ -1,39 +1,49 @@
 {% extends 'posts/base.html' %}
 
 {% block content %}
-<header class="messages">
-    <h1>messages</h1>
-</header>
-<div class="messages">
-    <header class="sort">
-        <div>
-            <a href={% url 'messages' %}>inbox</a>
-            <a href={% url 'messages_sent' %}>sent</a>
-            <a href={% url 'messages_create' %}>create</a>
+<div class="container">
+    <div class="d-flex flex-column m-auto m-2 p-2" style="max-width: 760px">
+        <div class="px-2 mx-2 fw-semibold fs-5">Messages</div>
+        <div class="py-2 px-3 m-2 bg-secondary rounded border border-border">
+            <div class="d-inline-flex">
+                {% if folder == 'received' %}
+                <a class="fw-semibold link-fade me-2 text-decoration-underline" href={% url 'messages' %}>inbox</a>
+                <a class="fw-semibold link-fade me-2" href={% url 'messages_sent' %}>sent</a>
+                <a class="fw-semibold link-fade" href={% url 'messages_create' %}>send</a>
+                {% elif folder == 'sent' %}
+                <a class="fw-semibold link-fade me-2" href={% url 'messages' %}>inbox</a>
+                <a class="fw-semibold link-fade me-2 text-decoration-underline" href={% url 'messages_sent' %}>sent</a>
+                <a class="fw-semibold link-fade" href={% url 'messages_create' %}>send</a>
+                {% elif form %}
+                <a class="fw-semibold link-fade me-2" href={% url 'messages' %}>inbox</a>
+                <a class="fw-semibold link-fade me-2" href={% url 'messages_sent' %}>sent</a>
+                <a class="fw-semibold link-fade text-decoration-underline" href={% url 'messages_create' %}>send</a>
+                {% endif %}
+            </div>
+            {% block messages %}
+            {% endblock %}
+            <div class="pagination">
+                <span class="step-links">
+                    {% if page_obj.paginator.num_pages > 2 %}
+                        <a href="?page=1">&laquo; first</a>
+                    {% endif %}
+                    {% if page_obj.has_previous %}
+                        <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                    {% endif %}
+                    {% if page_obj.paginator.num_pages > 1 %}
+                    <span class="current">
+                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                    </span>
+                    {% endif %}
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}">next</a>
+                    {% endif %}
+                    {% if page_obj.paginator.num_pages > 2 %}
+                        <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                    {% endif %}
+                </span>
+            </div>
         </div>
-    </header>
-    {% block messages %}
-    {% endblock %}
-    <div class="pagination">
-        <span class="step-links">
-            {% if page_obj.paginator.num_pages > 2 %}
-                <a href="?page=1">&laquo; first</a>
-            {% endif %}
-            {% if page_obj.has_previous %}
-                <a href="?page={{ page_obj.previous_page_number }}">previous</a>
-            {% endif %}
-            {% if page_obj.paginator.num_pages > 1 %}
-            <span class="current">
-                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-            </span>
-            {% endif %}
-            {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}">next</a>
-            {% endif %}
-            {% if page_obj.paginator.num_pages > 2 %}
-                <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
-            {% endif %}
-        </span>
-      </div>
+    </div>
 </div>
 {% endblock %}

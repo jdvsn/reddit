@@ -1,0 +1,25 @@
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content bg-secondary border border-border">
+            <div class="modal-body">
+                <div class="d-flex flex-column justify-content-between p-2 m-auto rounded">
+                    <button type="button" class="btn-close align-self-end" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h5 class="fw-semibold m-auto mb-3">Log In</h5>
+                    <form class="login-form d-flex flex-column" action={% url 'login' %} method="post">  
+                        {% csrf_token %}  
+                        <div class="p-1">
+                        {{ login_form.username }}
+                        </div>
+                        <div class="p-1">
+                        {{ login_form.password }}
+                        </div>
+                        {% if login_form.non_field_errors %}
+                            <p class="fw-semibold text-error m-auto mb-1 px-1">Invalid details, please try again.</p>
+                        {% endif %}
+                        <input class="btn btn-secondary py-1 px-2 mx-auto mt-3 border border-border" type="submit" name="submit" value="Login">
+                    </form> 
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

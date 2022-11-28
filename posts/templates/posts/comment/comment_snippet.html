@@ -12,13 +12,13 @@
             <input type="hidden" name="vote" value="+1">
             <input class="upvote btn btn-sm btn-vote btn-outline-* p-0 pe-1" type="submit" value="▲">
         </form>
-        {{ c.vote_total }} 
+        {{ c.score }} 
         <form action={% url 'comment_vote' post.subreddit.url post.url c.id %} method="post">
             {% csrf_token %}
             <input type="hidden" name="vote" value="-1">
             <input class="downvote btn btn-sm btn-vote btn-outline-* p-0 px-1" type="submit" value="▼">
         </form>
-        <small><div class="pe-1 text-muted fw-semibold" style="cursor: pointer" data-bs-toggle="collapse" data-bs-target="#replyForm{{ c.id }}" aria-expanded="false" aria-controls="replyForm{{ c.id }}">reply</div></small>
+        <small><div class="pe-1 link-underline text-muted fw-semibold" data-bs-toggle="collapse" data-bs-target="#replyForm{{ c.id }}" aria-expanded="false" aria-controls="replyForm{{ c.id }}">reply</div></small>
         {% if can_delete_comments or c.created_by == request.user %}
             {% include "posts/comment/comment_delete.html" %}
         {% endif %}

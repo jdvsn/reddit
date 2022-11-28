@@ -33,12 +33,13 @@ urlpatterns = [
     path('r/<slug:subreddit_url>/new/', views.subreddit_view, name='subreddit_new', kwargs={'filter': '-created_at'}),
     path('r/<slug:subreddit_url>/top/', views.subreddit_view, name='subreddit_top', kwargs={'filter': '-score'}),
     path('r/<slug:subreddit_url>/submit/', views.post_create, name='post_create'),
-    path('r/<slug:subreddit_url>/edit/', views.subreddit_edit, name='subreddit_edit'),
-    path('r/<slug:subreddit_url>/comments/<slug:post_url>/', views.post_detail, name='post_detail'),
+    path('r/<slug:subreddit_url>/edit/', views.subreddit_edit_info, name='subreddit_edit_info'),
+    path('r/<slug:subreddit_url>/moderators/', views.subreddit_edit_moderators, name='subreddit_edit_moderators'),
+    path('r/<slug:subreddit_url>/comments/<slug:post_url>/', views.post_detail, name='post_detail', kwargs={'comment_id': None}),
     path('r/<slug:subreddit_url>/comments/<slug:post_url>/vote/', views.vote, name='post_vote', kwargs={'comment_id': None}),
     path('r/<slug:subreddit_url>/comments/<slug:post_url>/vote/<int:comment_id>/', views.vote, name='comment_vote'),
     path('r/<slug:subreddit_url>/comments/<slug:post_url>/delete/', views.post_delete, name='post_delete'),
-    path('r/<slug:subreddit_url>/comments/<slug:post_url>/comment/<int:comment_id>/', views.comment_view, name='comment_view'),
+    path('r/<slug:subreddit_url>/comments/<slug:post_url>/comment/<int:comment_id>/', views.post_detail, name='comment_view'),
     path('r/<slug:subreddit_url>/comments/<slug:post_url>/comment/<int:comment_id>/delete/', views.comment_delete, name='comment_delete'),
     path('notifications/', views.notifications_view, name='notifications')
 ]

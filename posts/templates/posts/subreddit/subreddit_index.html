@@ -1,13 +1,20 @@
 {% extends 'posts/base.html' %}
 
 {% block content %}
-<h1>All subreddits</h1>
-<a href={% url 'subreddit_create' %}>Create a new subreddit</a>
-<ul>
-    {% for s in subreddit_list %}
-    <li>
-        <a href={% url 'subreddit' s.url %}>{{ s.subreddit_name }}</a>
-    </li>
-    {% endfor %}
-</ul>
+<div class="container">
+    <div class="d-flex flex-column m-auto m-2 p-2">
+        <div class="px-2 mx-2 fw-semibold fs-5">All subreddits</div>
+        <div class="py-2 px-3 m-2 bg-secondary rounded border border-border">
+            {% for s in subreddit_list %}
+                <div>
+                    <a class="fw-semibold link-fade fs-4" href={% url 'subreddit' s.url %}>r/{{ s.subreddit_name }}</a>
+                    {% if s.subreddit_info %}
+                        <p>{{ s.subreddit_info }}<p>
+                    {% endif %}
+                </div>
+                <hr class="mb-2"/>
+            {% endfor %}
+        </div>
+    </div>
+</div>
 {% endblock %}

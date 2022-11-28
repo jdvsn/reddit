@@ -17,7 +17,7 @@ def messages_view(request, folder):
     paginator = Paginator(messages, 5)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    return render(request, 'messages/home.html', {'user': user,'folder': folder, 'page_obj': page_obj})
+    return render(request, 'messages/home.html', {'user': user, 'folder': folder, 'page_obj': page_obj})
 
 @login_required(login_url='/login/')
 def messages_create(request):

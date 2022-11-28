@@ -5,7 +5,7 @@
     <a href={% url 'subreddit' post.subreddit %} class="stretched-link"></a>
     <h1 class="display-3">r/{{ post.subreddit }}</h1>
 </div>
-<div class="row justify-content-center my-4">
+<div class="row justify-content-center m-4">
     <div class="col-lg-6 bg-post rounded px-0">
         <div class="post d-flex flex-row">
             <div class="votes-container">
@@ -13,13 +13,13 @@
                     <form action={% url 'post_vote' post.subreddit.url post.url %} method="post">
                         {% csrf_token %}
                         <input type="hidden" name="vote" value="+1">
-                        <input class="upvote btn btn-sm btn-vote btn-outline-*" type="submit" value="▲">
+                        <input class="upvote btn btn-sm btn-vote btn-outline-* link-fade" type="submit" value="🡅">
                     </form>
-                    <div style="color: #D7DADC" class="score mx-auto">{{ post.vote_total }}</div>
+                    <div class="score mx-auto fw-bold">{{ post.vote_total }}</div>
                     <form action={% url 'post_vote' post.subreddit.url post.url %} method="post">
                         {% csrf_token %}
                         <input type="hidden" name="vote" value="-1">
-                        <input class="downvote btn btn-sm btn-vote btn-outline-*" type="submit" value="▼">
+                        <input class="downvote btn btn-sm btn-vote btn-outline-* link-fade" type="submit" value="🡇">
                     </form>
                 </div>
             </div>
@@ -56,56 +56,10 @@
         </div>
         <hr class="mx-3 mt-2"/>
         <div class="comments pb-3 px-3 w-100">
-            <div class="px-4">
-                <form action="" method="post">
-                    {% csrf_token %}
-                    {{ comment_form }}
-                    <input type="submit" value="send" class="btn btn-textbox border m-0 mt-2 p-0 px-2 border-border text-muted fw-semibold" style="border-radius: 3px">
-                </form>
-            </div>
-            {% if post.comment_count > 0 %}
-                <div class="comment-list mt-2">
-                    {% for c in comments %}
-                        <div id="infoComment{{ c.id }}" style="display: none">    
-                            <small class="d-inline-flex pe-2 py-2">
-                                <div class="mx-2 fw-semibold" id="showComment{{ c.id }}" style="cursor: pointer" onclick="showComment(id)">+</div>
-                                <a href={% url 'profile' c.created_by %} class="fw-semibold link-underline me-1">{{ c.created_by }}</a>
-                                <div class="text-muted">· {{ c.when }}</div>
-                            </small>
-                        </div>
-                        <div class="d-flex flex-row">
-                            <div id="hideComment{{ c.id }}" class="p-2 py-3 h-auto" style="cursor: pointer" onclick="hideComment(id)">
-                                <div class="vr h-100"></div>
-                            </div>
-                            <div id="comment{{ c.id }}">
-                                <div class="d-flex flex-column p-2 mx-1">
-                                    {% include "posts/comment/comment_snippet.html" %}
-                                    {% if c.replies.all %}
-                                        <div class="comment-replies ms-2">
-                                            {% for cr in c.replies.all %}
-                                                <div id="infoComment{{ cr.id }}" style="display: none">    
-                                                    <small class="d-inline-flex pt-1">
-                                                        <div class="mx-2 fw-semibold" id="showComment{{ cr.id }}" style="cursor: pointer" onclick="showComment(id)">+</div>
-                                                        <a href={% url 'profile' cr.created_by %} class="fw-semibold link-underline me-1">{{ cr.created_by }}</a>
-                                                        <div class="text-muted">· {{ cr.when }}</div>
-                                                    </small>
-                                                </div>  
-                                                <div class="d-flex flex-row p-1">
-                                                    <div id="hideComment{{ cr.id }}" class="p-2 py-2 me-2 h-auto" style="cursor: pointer" onclick="hideComment(id)">
-                                                        <div class="vr h-100"></div>
-                                                    </div>
-                                                    <div id="comment{{ cr.id }}">
-                                                        {% include "posts/comment/comment_snippet.html" with c=cr %}
-                                                    </div>
-                                                </div>
-                                            {% endfor %}  
-                                        </div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                        </div>
-                    {% endfor %}
-                </div>
+            {% if comment %}
+                {% include 'posts/comment/comment_view.html' with c=comment %}
+            {% else %}
+                {% include 'posts/comment/comments.html' %}
             {% endif %}
         </div>
     </div>

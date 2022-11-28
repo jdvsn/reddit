@@ -1,14 +1,26 @@
 {% extends 'posts/base.html' %}
 
 {% block content %}
-<h1>Login</h1>
-<form class="login-form" action={% url 'login' %} method="post">  
-    {% csrf_token %}  
-    {{ form }}
-    {% if request.GET.next %} 
-        <input class="next" type="hidden" name="next" value="{{ request.GET.next }}"> 
-    {% endif %}
-    <input class="login" type="submit" name="submit" value="Login">
-</form>  
-<a href={% url 'register' %}>Create account</a>
+<div class="container">
+    <div class="d-flex flex-column p-2 m-auto my-4 bg-secondary border border-border rounded" style="max-width: 400px">
+        <h5 class="fw-semibold m-auto mb-3">Log In</h5>
+        <form class="login-form d-flex flex-column" action={% url 'login' %} method="post">  
+            {% csrf_token %}  
+            <div class="p-1">
+            {{ form.username }}
+            </div>
+            <div class="p-1">
+            {{ form.password }}
+            </div>
+            {% if form.non_field_errors %}
+                <p class="fw-semibold text-error m-auto mb-1 px-1">Invalid details, please try again.</p>
+            {% endif %}
+            {% if request.GET.next %} 
+                <input class="next" type="hidden" name="next" value="{{ request.GET.next }}"> 
+            {% endif %}
+            <input class="btn btn-secondary p-2 m-1 border border-border" type="submit" name="submit" value="Login">
+        </form> 
+        <a class="text-muted link-underline fw-semibold m-auto" href={% url 'register' %}><small class="m-auto">Create Account<small></a>
+    </div>
+</div>
 {% endblock %}

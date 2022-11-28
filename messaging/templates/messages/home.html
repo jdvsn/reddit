@@ -1,25 +1,41 @@
 {% extends 'messages/base.html' %}
 
 {% block messages %}
-<h2>{{ folder }}</h2>
 {% if page_obj %}
     {% if folder == 'sent' %}
-    {% for message in page_obj %}
-    <div class="message">
-        <div class="message-info">sent to {{ message.sent_to }} {{ message.when }}</div>
-        <div class="message-body">{{ message.message_text }}</div>
-    </div>
-    {% endfor %}
-    {% endif %}
-    {% if folder == 'received' %}
-    {% for message in page_obj %}
-    <div class="message">
-        <div class="message-info">sent from {{ message.sent_by }} {{ message.when }}</div>
-        <div class="message-body">{{ message.message_text }}</div>
-    </div>
-    {% endfor %}
+        {% for message in page_obj %}
+            <hr class="mb-1 mt-2"/>
+            <div>
+                <small class="fw-semibold text-muted">
+                    to
+                    <a class="link-fade m-0 p-0" href="{% url 'profile' message.sent_to %}">
+                        {{ message.sent_to }}
+                    </a>
+                    {{ message.when }}
+                </small>
+                <div class="fw-light">{{ message.message_text }}</div>
+            </div>
+        {% endfor %}
+    {% elif folder == 'received' %}
+        {% for message in page_obj %}
+            <hr class="mb-1 mt-2"/>
+            <div>
+                <small class="fw-semibold text-muted">
+                    from
+                    <a class="link-fade m-0 p-0" href="{% url 'profile' message.sent_by %}">
+                        {{ message.sent_by }}
+                    </a> 
+                    {{ message.when }}
+                </small>
+                <div class="fw-light">{{ message.message_text }}</div>
+            </div>
+        {% endfor %}
     {% endif %}
 {% else %}
-    there is nothing here
+    <hr class="mb-1 mt-2"/>
+    <p class="my-3">You haven't {{ folder }} any messages yet.<a class="m-2 fw-semibold text-muted link-underline" href={% url 'messages_create' %}>Get the conversation started.</a></p>
 {% endif %}
+<hr class="mb-1 mt-2"/>
 {% endblock %}
+
+moorfields.outpatientbookingsbc@nhs.net

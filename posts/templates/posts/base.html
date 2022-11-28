@@ -25,8 +25,9 @@
         <header class="navbar border-bottom border-border bg-secondary fixed-top d-flex flex-nowrap justify-content-center p-0 m-0">
             <div class="w-100 d-flex justify-content-start">
                 <ul class="nav p-2">
-                    <h6><li class="py-1 px-2"><a class="link-fade fw-semibold" href={% url 'home' %}>home</a></li></h6>
-                    <h6><li class="py-1 px-2"><a class="link-fade fw-semibold" href={% url 'subreddit_index' %}>subreddits</a></li></h6>
+                    <li class="py-1 px-2"><a class="link-fade fw-semibold" href={% url 'home' %} title="Home"><svg width="25px" height="25px" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" /></svg></a></li>
+                    <li class="py-1 px-2"><a class="link-fade fw-semibold" href={% url 'subreddit_index' %}>subreddits</a></li>
+                    <li class="py-1 px-2"><a class="link-fade fw-semibold" href={% url 'subreddit_create' %}>create a subreddit</a></li>
                 </ul>
             </div>
             <div class="px-2">
@@ -35,19 +36,21 @@
             <div class="w-100 d-flex justify-content-end">
                 <ul class="nav p-2">
                     {% if user.is_authenticated %}
-                    <h6><li class="py-1 px-2"><a class="link-fade fw-semibold" href={% url 'awards' %}>awards</a></li></h6>
-                    <h6><li class="py-1 px-2"><a class="link-fade fw-semibold" href={% url 'notifications' %}>&#128276;</a></li></h6>
-                    <h6><li class="py-1 px-2"><a class="link-fade fw-semibold" href={% url 'messages' %}>&#9993;</a></li></h6>
-                    <h6><li class="py-1 px-2"><a class="link-fade fw-semibold" href={% url 'profile' user %}>u/{{ user }}</a></li></h6>
-                    <h6><li class="py-1 px-2"><a class="link-fade fw-semibold" href={% url 'logout' %}>logout</a></h6>
+                    <li class="py-1 px-2"><a class="link-fade fw-semibold" href={% url 'awards' %} title="Awards"><svg width="25px" height="25px" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M21 11.25v8.25a1.5 1.5 0 01-1.5 1.5H5.25a1.5 1.5 0 01-1.5-1.5v-8.25M12 4.875A2.625 2.625 0 109.375 7.5H12m0-2.625V7.5m0-2.625A2.625 2.625 0 1114.625 7.5H12m0 0V21m-8.625-9.75h18c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125h-18c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" /></svg></a></li>
+                    <li class="py-1 px-2"><a class="link-fade fw-semibold" href={% url 'notifications' %} title="Notifications"><svg width="25px" height="25px" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" /></svg></a></li>
+                    <li class="py-1 px-2"><a class="link-fade fw-semibold" href={% url 'messages' %} title="Messages"><svg width="25px" height="25px" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M8.625 9.75a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375m-13.5 3.01c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.184-4.183a1.14 1.14 0 01.778-.332 48.294 48.294 0 005.83-.498c1.585-.233 2.708-1.626 2.708-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" /></svg></a></li>
+                    <li class="py-1 px-2"><a class="link-fade fw-semibold" href={% url 'profile' user %} title="Profile">u/{{ user }}</a></li>
+                    <li class="py-1 px-2"><a class="link-fade fw-semibold d-inline-flex align-items-center" href={% url 'logout' %}>logout<svg class="ms-1" width="25px" height="25px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6"><path fill-rule="evenodd" d="M7.5 3.75A1.5 1.5 0 006 5.25v13.5a1.5 1.5 0 001.5 1.5h6a1.5 1.5 0 001.5-1.5V15a.75.75 0 011.5 0v3.75a3 3 0 01-3 3h-6a3 3 0 01-3-3V5.25a3 3 0 013-3h6a3 3 0 013 3V9A.75.75 0 0115 9V5.25a1.5 1.5 0 00-1.5-1.5h-6zm5.03 4.72a.75.75 0 010 1.06l-1.72 1.72h10.94a.75.75 0 010 1.5H10.81l1.72 1.72a.75.75 0 11-1.06 1.06l-3-3a.75.75 0 010-1.06l3-3a.75.75 0 011.06 0z" clip-rule="evenodd" /></svg></a></li>
                     {% else %}
-                    <h6><li class="py-1 px-2"><a class="link-fade fw-semibold" href={% url 'login' %}>login</a></li></h6>
-                    <h6><li class="py-1 px-2"><a class="link-fade fw-semibold" href={% url 'register' %}>register</a></li></h6>
+                    <li class="py-1 px-2"><div class="link-fade fw-semibold" data-bs-toggle="modal" data-bs-target="#loginModal">login</div></li>
+                    <li class="py-1 px-2"><div class="link-fade fw-semibold" data-bs-toggle="modal" data-bs-target="#registerModal">register</div></li>
                     {% endif %}
                 </ul>
             </div>
         </header>
         <div class="content">
+            {% include "accounts/login_snippet.html" %}
+            {% include "accounts/register_snippet.html" %}
             {% block content %}
             {% endblock %}
         </div>

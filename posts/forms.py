@@ -9,46 +9,43 @@ class SubredditForm(forms.ModelForm):
         model = Subreddit
         fields = ['subreddit_name', 'subreddit_info']
         labels = {
-            'subreddit_name': _('Create a new subreddit:'),
+            'subreddit_name': _(''),
             'subreddit_info': _('')
         }
         widgets = {
             'subreddit_name': forms.TextInput(attrs={
                 'placeholder': 'Enter subreddit name',
-                }),
+                'class': 'form-control form-subreddit-name bg-textbox border border-border text-body',
+            }),
             'subreddit_info': forms.Textarea(attrs={
-                'placeholder': 'Add a short description (optional)'
+                'placeholder': 'Add a short description (optional)',
+                'class': 'form-control form-subreddit-info bg-textbox border border-border text-body',
             })
         }
         error_messages = {'subreddit_name': {'unique': 'A subreddit with this name already exists.'}}
 
-class SubredditEditForm(forms.ModelForm):
+class SubredditEditInfoForm(forms.ModelForm):
     class Meta:
         model = Subreddit
         fields = ['subreddit_info']
+        widgets = {
+            'subreddit_info': forms.Textarea(attrs={
+                'placeholder': 'Add a short description (optional)',
+                'class': 'form-control form-subreddit-info bg-textbox border border-border text-body',
+            })
+        }
 
-    new_moderator = forms.CharField(max_length=20, required=False)
-    remove_moderator = forms.CharField(max_length=20, required=False)
+class SubredditEditModeratorsForm(forms.Form):
+
+    new_moderator = forms.CharField(max_length=20, label=_(''), widget=forms.TextInput(attrs={'placeholder': 'Add moderator','class': 'form-control bg-textbox border border-border text-body',}))
 
     def clean_new_moderator(self):
         user = self.cleaned_data['new_moderator']
-        if user == '':
-            return None
         try:
             new_moderator = User.objects.get(username=user)
         except User.DoesNotExist:
             raise forms.ValidationError('User does not exist')
         return new_moderator
-
-    def clean_remove_moderator(self):
-        user = self.cleaned_data['remove_moderator']
-        if user == '':
-            return None
-        try:
-            remove_moderator = User.objects.get(username=user)
-        except User.DoesNotExist:
-            raise forms.ValidationError('User does not exist')
-        return remove_moderator
     
 class PostForm(forms.ModelForm):
     class Meta:
@@ -70,7 +67,7 @@ class PostForm(forms.ModelForm):
                 }),
             'post_body': forms.Textarea(attrs={
                 'class': 'form-control form-post-body bg-textbox border border-border text-body',
-                'rows': 20,
+                'rows': 16,
                 'placeholder': 'Text (optional)',
                 }),
             'post_image': forms.ClearableFileInput(attrs={
@@ -84,7 +81,7 @@ class PostForm(forms.ModelForm):
             subreddit = kwargs.pop('subreddit')
             kwargs.update(initial={'subreddit': subreddit})
         super(PostForm, self).__init__(*args, **kwargs)
-        self.fields['subreddit'].empty_label = "Choose Subreddit"
+        self.fields['subreddit'].empty_label = 'Subreddit'
 
 class CommentForm(forms.ModelForm):
     class Meta:

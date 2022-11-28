@@ -1,17 +1,17 @@
 <div class="post-container p-2">
     <div class="post rounded bg-post border border-border d-flex flex-row">
         <div class="votes-container">
-            <div class="votes d-flex flex-column">
+            <div class="votes d-flex flex-column ms-1">
                 <form action={% url 'post_vote' post.subreddit.url post.url %} method="post">
                     {% csrf_token %}
                     <input type="hidden" name="vote" value="+1">
-                    <input class="upvote btn btn-sm btn-vote btn-outline-*" type="submit" value="▲">
+                    <input class="upvote btn btn-md btn-vote btn-outline-* p-0 m-0" type="submit" value="🡅">
                 </form>
-                <div style="color: #D7DADC" class="score mx-auto">{{ post.vote_total }}</div>
+                <div class="score mx-auto fw-semibold">{{ post.vote_total }}</div>
                 <form class="m-w-100" action={% url 'post_vote' post.subreddit.url post.url %} method="post">
                     {% csrf_token %}
                     <input type="hidden" name="vote" value="-1">
-                    <input class="downvote btn btn-sm btn-vote btn-outline-*" type="submit" value="▼">
+                    <input class="downvote btn btn-md btn-vote btn-outline-* p-0 m-0" type="submit" value="🡇">
                 </form>
             </div>
         </div>

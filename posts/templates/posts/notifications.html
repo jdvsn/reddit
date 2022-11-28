@@ -1,18 +1,28 @@
 {% extends 'posts/base.html' %}
 
 {% block content %}
-<header><h1>notifications</h1></header>
-<div class="notifications">
-    {% for x in post_replies %}
-        <div class="notification">
-        {% if x.parent %}
-            <p>reply from {{ x.created_by }} {{ x.when }} to your <a href={% url 'comment_view' x.post.subreddit.url x.post.url x.parent.id %}>comment</a></p>
-            <p><a href={% url 'comment_view' x.post.subreddit.url x.post.url x.id %}>{{ x.preview }}</a></p>
-        {% else %}
-            <p>comment from {{ x.created_by }} {{ x.when }} on your <a href={% url 'post_detail' x.post.subreddit.url x.post.url %}>post</a></p>
-            <p><a href={% url 'comment_view' x.post.subreddit.url x.post.url x.id %}>{{ x.preview }}</a></p>
-        {% endif %}
+<div class="container">
+    <div class="d-flex flex-column m-auto m-2 p-2" style="max-width: 760px">
+        <div class="px-2 mx-2 fw-semibold fs-5">Notifications</div>
+        <div class="py-2 px-3 m-2 bg-secondary rounded border border-border">
+            {% for x in replies %}
+                <div class="notification">
+                    <small class="fw-semibold">
+                    {% if x.parent %}
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="--darkreader-inline-stroke: currentColor;" data-darkreader-inline-stroke=""><polyline points="9 17 4 12 9 7"></polyline><path d="M20 18v-2a4 4 0 0 0-4-4H4"></path></svg>
+                        reply from {{ x.created_by }} {{ x.when }} to your 
+                        <a class="text-muted link-underline" href={% url 'comment_view' x.post.subreddit.url x.post.url x.parent.id %}>comment</a>
+                    {% else %}
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="--darkreader-inline-stroke: currentColor;" data-darkreader-inline-stroke=""><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                        comment from {{ x.created_by }} {{ x.when }} on your 
+                        <a class="text-muted link-underline" href={% url 'post_detail' x.post.subreddit.url x.post.url %}>post</a>
+                    {% endif %}
+                    </small>
+                    <p><a class="fw-light link-fade" href={% url 'comment_view' x.post.subreddit.url x.post.url x.id %}>{{ x.preview }}</a></p>
+                </div>
+                <hr class="mb-1 mt-2"/>
+            {% endfor %}
         </div>
-    {% endfor %}
+    </div>
 </div>
 {% endblock %}
