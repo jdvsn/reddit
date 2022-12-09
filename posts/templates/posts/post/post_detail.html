@@ -34,7 +34,9 @@
                     <div class="post-body ms-1 px-1 pt-1">
                         <h4 class="mb-1">{{ post.post_title }}</h4>
                         {% if post.post_image.url != None %}
-                            <img class="image-detail img-fluid align-self-center rounded p-1 pe-5" src={{ post.post_image.url }}>
+                            <div class="w-100 d-flex justify-content-center">
+                                <img class="image-detail img-fluid rounded-1 m-2" src={{ post.post_image.url }}>
+                            </div>
                         {% endif %}
                         {% if post.post_body != '' %}
                             <p class="text-wrap text-break pb-1 fw-light">{{ post.post_body }}</p>

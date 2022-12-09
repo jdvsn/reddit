@@ -5,16 +5,17 @@ document.addEventListener("DOMContentLoaded", function() {
       var fileChanged = function() {
         var files = input.files;
         if (files.length) {
-          droppable.querySelector('span').style.display = 'block';
-          droppable.querySelector('#image-upload-preview').style.display = 'block';
-          droppable.querySelector('div').innerHTML = '';
           droppable.classList.add('filled');
-          
+          droppable.querySelector('span').style.display = 'block';
+          droppable.querySelector('div').innerHTML = '';
+          droppable.querySelector('#image-upload-preview').style.display = 'block';
+          droppable.querySelector('#image-upload-svg-icon').style.display = 'none';
         } else {
-          droppable.querySelector('div').innerHTML = originalText;
           droppable.classList.remove('filled');
           droppable.querySelector('span').style.display = 'none';
+          droppable.querySelector('div').innerHTML = originalText;
           droppable.querySelector('#image-upload-preview').style.display = 'none';
+          droppable.querySelector('#image-upload-svg-icon').style.display = 'block';
         }
       };
       input.addEventListener('change', fileChanged);
