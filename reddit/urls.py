@@ -10,7 +10,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('payments/', include('payments.urls')),
     path('messages/', include('messaging.urls')),
-    #path('awards/', include('awards.urls')),
+    path('awards/', include('awards.urls')),
     # ACCOUNTS
     path('login/', uviews.login_view, name='login'),
     path('logout/', uviews.logout_view, name='logout'),
