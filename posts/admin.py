@@ -7,7 +7,7 @@ class SubredditAdmin(admin.ModelAdmin):
 admin.site.register(Subreddit, SubredditAdmin)
 
 class PostAdmin(admin.ModelAdmin):
-    fields = ['created_by', 'subreddit', 'post_type', 'post_title', 'post_body']
+    fields = ['created_by', 'subreddit', 'post_title', 'post_body']
 admin.site.register(Post, PostAdmin)
 
 class CommentAdmin(admin.ModelAdmin):
