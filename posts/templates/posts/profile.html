@@ -1,37 +1,20 @@
 {% extends 'posts/base.html' %}
 
 {% block content %}
-<header class="profile">
-    <h1>u/{{ user }}</h1>
-</header>
-<div class="profile">
-    <div class="profile-sidebar-left"></div>
-    <div class="profile-content">
-        <header class="sort">
+<div class="container">
+    <div class="row justify-content-around">
+        <div class="profile-sidebar-left col-lg-3"></div>
+        <div class="profile-content col-lg-6">
             <div class="sort">
                 {% if show_posts and show_comments %}
-                <div>
                     <a href={% url 'profile_top' user %}>top</a>
-                </div>
-                <div>
                     <a href={% url 'profile_new' user %}>new</a>
-                </div>
-                {% endif %}
-                {% if show_posts and not show_comments %}
-                <div>
+                {% elif show_posts and not show_comments %}
                     <a href={% url 'profile_posts_top' user %}>top</a>
-                </div>
-                <div>
                     <a href={% url 'profile_posts_new' user %}>new</a>
-                </div>
-                {% endif %}
-                {% if show_comments and not show_posts %}
-                <div>
+                {% elif show_comments and not show_posts %}
                     <a href={% url 'profile_comments_top' user %}>top</a>
-                </div>
-                <div>
                     <a href={% url 'profile_comments_new' user %}>new</a>
-                </div>
                 {% endif %}
             </div>
             <div class="profile-sort">
@@ -39,93 +22,100 @@
                 <a href={% url 'profile_posts' user %}>posts</a>
                 <a href={% url 'profile_comments' user %}>comments</a>
             </div>
-        </header>
-        {% if not page_obj %}
-            <div>{{ user }} hasn't submitted anything.</div>
-        {% endif %}
-        {% for x in page_obj %}
-            {% if x.type == 'post' %}
-                <div class='post'>
-                    <div class="votes">
-                        <form action={% url 'post_vote' x.subreddit.url x.url %} method="post">
-                            {% csrf_token %}
-                            <input type="hidden" name="vote" value="+1">
-                            <input class="upvote" type="submit" value="▲">
-                        </form>
-                        <div class="score">{{ x.vote_total }}</div>
-                        <form action={% url 'post_vote' x.subreddit.url x.url %} method="post">
-                            {% csrf_token %}
-                            <input type="hidden" name="vote" value="-1">
-                            <input class="downvote" type="submit" value="▼">
-                        </form>
-                    </div>
-                    <div class="postdetails">
-                        <div class="postinfo">
-                            {{ x.type }} by {{ user }} {{ x.when }} to <i><a href={% url 'subreddit' x.subreddit.url %}>r/{{ x.subreddit }}</a></i> | {{ x.comment_count }} comments
+            {% if not page_obj %}
+                <div>{{ user }} hasn't submitted anything.</div>
+            {% endif %}
+            {% for x in page_obj %}
+                {% if x.type == 'post' %}
+                    {% include "posts/post/post_snippet.html" with post=x %}
+                {% endif %}
+                {% if x.type == 'comment' %}
+                <div class="p-2">
+                    <div class="comment rounded bg-post border border-border d-flex flex-row">
+                        <div>
+                            <div class="votes d-flex flex-column ms-1">
+                                <form action={% url 'comment_vote' x.post.subreddit.url x.post.url x.id %} method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="vote" value="+1">
+                                    <input class="upvote btn btn-md btn-vote btn-outline-* p-0 m-0" type="submit" value="🡅">
+                                </form>
+                                <div class="score mx-auto fw-semibold">{{ x.score }}</div>
+                                <form class="m-w-100" action={% url 'comment_vote' x.post.subreddit.url x.post.url x.id %} method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="vote" value="-1">
+                                    <input class="downvote btn btn-md btn-vote btn-outline-* p-0 m-0" type="submit" value="🡇">
+                                </form>
+                            </div>
                         </div>
-                        <div class="postpreview">
-                            <h2><a href={% url 'post_detail' x.subreddit.url x.url %}>{{ x.post_title }}</a></h2>
-                            <div class="preview-body">
-                                {% if x.preview %}
-                                    <p class="preview-text"> {{ x.preview }} </p>
-                                {% endif %}
-                                {% if x.post_image.url != None %}
-                                    <img class="image-preview" src={{ x.post_image.url }}>
-                                {% endif %}
+                        <div class=" w-100">
+                            <div class="container d-flex flex-column p-0 m-0">
+                                <div class="post-info">
+                                    <small class="text-muted">
+                                        comment {{ x.when }} on "<a class="text-muted link-underline" href={% url 'post_detail' x.post.subreddit.url x.post.url %}>{{ x.post.post_title }}</a>"
+                                    </small>
+                                </div>
+                                <div class="post-preview p-1 position-relative">
+                                    <a href={% url 'comment_view' x.post.subreddit.url x.post.url x.id %} class="stretched-link"></a>                               
+                                    <div class="post-preview-container d-flex flex-column rounded bg-secondary p-2 pt-1">
+                                        <p>{{ x.comment_text }}</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            {% endif %}
-            {% if x.type == 'comment' %}
-                <div class="profile-comment">
-                    <div>{{ x.score }}</div>
-                    <div class="profile-comment-details">
-                        <div class="profile-comment-info">
-                            <a href={% url 'comment_view' x.post.subreddit.url x.post.url x.id %}>comment</a> by {{ user }} {{ x.when }} on <a href={% url 'post_detail' x.post.subreddit.url x.post.url %}>{{ x.post.post_title }}</a> in <i><a href={% url 'subreddit' x.post.subreddit.url %}>r/{{ x.post.subreddit }}</a></i>
-                        </div>
-                        <div class="profile-comment-text">
-                            {{ x.comment_text }}
-                        </div>
-                    </div>
-                </div>
-            {% endif %}
-        {% endfor %}
-        <div class="pagination">
-            <span class="step-links">
-                {% if page_obj.has_previous %}
-                    <a href="?page=1">&laquo; first</a>
-                    <a href="?page={{ page_obj.previous_page_number }}">previous</a>
                 {% endif %}
-                {% if page_obj.paginator.num_pages > 1 %}
-                <span class="current">
-                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            {% endfor %}
+            <div class="pagination">
+                <span class="step-links">
+                    {% if page_obj.has_previous %}
+                        <a href="?page=1">&laquo; first</a>
+                        <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                    {% endif %}
+                    {% if page_obj.paginator.num_pages > 1 %}
+                    <span class="current">
+                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                    </span>
+                    {% endif %}
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}">next</a>
+                        <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                    {% endif %}
                 </span>
-                {% endif %}
-                {% if page_obj.has_next %}
-                    <a href="?page={{ page_obj.next_page_number }}">next</a>
-                    <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
-                {% endif %}
-            </span>
+            </div>
         </div>
-    </div>
-    <div class="profile-sidebar-right">
-        <h3>Awards received</h3>
-        <p>Gold: {{ gold_awards }}</p>
-        <p>Silver: {{ silver_awards }}</p>
-        <p>Bronze: {{ bronze_awards }}</p>
-        {% if user.subreddits_created %}
-        <h3>Subreddits created</h3>
-        {% for subreddit in user.subreddits_created.all %}
-        <p>r/{{ subreddit.subreddit_name }}</p>
-        {% endfor %}
-        {% endif %}
-        {% if user.subreddits_moderated %}
-        <h3>Subreddits moderated</h3>
-        {% for subreddit in user.subreddits_moderated.all %}
-        <p>r/{{ subreddit.subreddit_name }}</p>
-        {% endfor %}
-        {% endif %}
+        <div class="profile-sidebar-right col-lg-3 pt-4 pb-2 px-2">
+            <div class="bg-secondary p-2 border border-border rounded-1">
+                <div class="fw-semibold fs-5">u/{{ user }}</div>
+                {% if total_awards > 0 %}
+                    <hr class="my-2"/>
+                    <h1 class="fw-semibold fs-6">Awards received</h1>
+                    {% if gold_awards > 0 %}
+                        <p>Gold: {{ gold_awards }}</p>
+                    {% endif %}
+                    {% if silver_awards > 0 %}
+                        <p>Silver: {{ silver_awards }}</p>
+                    {% endif %}
+                    {% if bronze_awards > 0 %}
+                        <p>Bronze: {{ bronze_awards }}</p>
+                    {% endif %}
+                {% endif %}
+                {% if user.subreddits_created.count > 0 %}
+                    <hr class="my-2"/>
+                    <h1 class="fw-semibold fs-6">Subreddits created</h1>
+                    {% for subreddit in user.subreddits_created.all %}
+                        <p>r/{{ subreddit.subreddit_name }}</p>
+                    {% endfor %}
+                {% endif %}
+                {% if user.subreddits_moderated.count > 0 %}
+                    <hr class="my-2"/>
+                    <h1 class="fw-semibold fs-6">Subreddits moderated</h1>
+                    {% for subreddit in user.subreddits_moderated.all %}
+                        <p>r/{{ subreddit.subreddit_name }}</p>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}

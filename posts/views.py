@@ -203,6 +203,7 @@ def profile_view(request, user, show_posts, show_comments, filter):
         'page_obj' : page_obj, 
         'show_posts': show_posts, 
         'show_comments': show_comments,
+        'total_awards': awards['total'],
         'gold_awards': awards['gold'],
         'silver_awards': awards['silver'],
         'bronze_awards': awards['bronze'],

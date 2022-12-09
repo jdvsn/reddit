@@ -2,9 +2,17 @@ html{
     background-color: #030303
 }
 
+body{
+    font-family: 'Source Sans Pro', 'sans-serif';
+}
+
 h1,h2,h3,h4,h5,h6{
     margin: 0;
     color: rgb(215,218,220);
+}
+
+.home-container, .subreddit-container{
+    max-width: 1800px;
 }
 
 .post-title{
@@ -48,8 +56,19 @@ p{
     color: rgb(215,218,220);
 }
 
-body{ 
-    padding-top: 52px; 
+@media screen and (min-device-width: 768px){ 
+    .content{
+        padding-top: 52px; 
+    }
+}
+
+.mobile-dropdown{
+    width: 75vw;
+    max-height: 85vh;
+    overflow-x: hidden; 
+    -webkit-box-shadow: 0px 0px 48px 17px rgba(0,0,0,1);
+    -moz-box-shadow: 0px 0px 48px 17px rgba(0,0,0,1);
+    box-shadow: 0px 0px 48px 17px rgba(0,0,0,1);
 }
 
 div.post-info{
@@ -106,6 +125,18 @@ div.post-info{
     color: rgb(215,218,220);
 }
 
+li.dropdown a.nav-link{
+    color: rgb(215,218,220);
+}
+
+li.dropdown a.nav-link.link-fade:hover{
+    color: grey;
+}
+
+a.dropdown-item:hover{
+    background: #272729;
+    color: rgb(215,218,220);
+}
 
 hr{
     border-color: #4b4d4e;
@@ -180,4 +211,9 @@ img.image-upload-preview{
 
 img{
     max-height: 75vh;
+}
+
+.navbar-brand{
+    left: 50%;
+    transform: translateX(-50%);
 }

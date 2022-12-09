@@ -2,6 +2,11 @@
 
 {% load static %}
 
+{% block head %}
+<script src="https://js.stripe.com/v3/"></script>
+<script src="{% static 'stripe.js' %}"></script>
+{% endblock %}
+
 {% block content %}
 <h1>Buy an award</h1>
 <ul>

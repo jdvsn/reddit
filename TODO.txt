@@ -1,6 +1,0 @@
-
-js voting
-pagination https://getbootstrap.com/docs/5.0/components/pagination/
-email
-
-add '?to=<user>' to award link on posts/comments - implement in views

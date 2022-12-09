@@ -1,17 +1,20 @@
 {% extends 'posts/base.html' %}
 
 {% block content %}
-<div class="container">
+<div class="container home-container">
     <div class="row justify-content-around">
         <div class="sidebar-left p-2 col-lg-2">
             <div class="container p-2">
                 <div class="bg-secondary rounded border border-border p-2">
-                    <h5 class="p-1">Sample sidebar text</h5>
-                    <p class="p-1">Here is some body text to fill the space under my sample sidebar title.
+                    <h5 class="p-1 fw-semibold">Welcome To My Website</h5>
+                    <p class="p-1">This is my recreation of <a class="text-muted link-underline" href="https://www.reddit.com" title="Reddit">Reddit</a>. It's a forum website with user created and managed sub-forums (Subreddits) - with some additional features.</p>
+                    <p class="p-1">You are currently at the home page, viewing all posts regardless of Subreddit.</p>
+                    <p class="p-1">Use the navigation bar above to view Subreddits and the posts within them, or Sign Up to create your own.</p>
+                    <p class="p-1">View the github repo <a class="text-muted link-underline" href="https://github.com/jdvsn/reddit">here.</a>
                 </div>
             </div>
         </div>
-        <div class="posts col-lg-7">
+        <div class="posts col-lg-6">
             <div class="container d-flex flex-column p-2">
                 <div class="header-container p-2">
                     <header class="sort rounded bg-post border border-border d-inline-flex justify-content-between w-100">

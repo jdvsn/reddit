@@ -1,53 +1,3 @@
-// Get Stripe publishable key
-fetch("/payments/config/")
-.then((result) => { return result.json(); })
-.then((data) => {
-  // Initialize Stripe.js
-  const stripe = Stripe(data.publicKey);
-
-  // new
-  // Event handler
-  document.querySelector("#gold").addEventListener("click", () => {
-    // Get Checkout Session ID
-    fetch("/payments/award/gold/price_1Lx8MODySp54NhVdcJPFryhh/")
-    .then((result) => { return result.json(); })
-    .then((data) => {
-      console.log(data);
-      // Redirect to Stripe Checkout
-      return stripe.redirectToCheckout({sessionId: data.sessionId})
-    })
-    .then((res) => {
-      console.log(res);
-    });
-  });
-  document.querySelector("#silver").addEventListener("click", () => {
-    // Get Checkout Session ID
-    fetch("/payments/award/silver/price_1Lx8M9DySp54NhVd0ZRf5KaM/")
-    .then((result) => { return result.json(); })
-    .then((data) => {
-      console.log(data);
-      // Redirect to Stripe Checkout
-      return stripe.redirectToCheckout({sessionId: data.sessionId})
-    })
-    .then((res) => {
-      console.log(res);
-    });
-  });
-  document.querySelector("#bronze").addEventListener("click", () => {
-    // Get Checkout Session ID
-    fetch("/payments/award/bronze/price_1LvfBxDySp54NhVdXxcRmTg9/")
-    .then((result) => { return result.json(); })
-    .then((data) => {
-      console.log(data);
-      // Redirect to Stripe Checkout
-      return stripe.redirectToCheckout({sessionId: data.sessionId})
-    })
-    .then((res) => {
-      console.log(res);
-    });
-  });
-});
-
 document.addEventListener("DOMContentLoaded", function() {
     document.querySelectorAll('.file-droppable').forEach(function(droppable) {
       var originalText = droppable.querySelector('div').innerHTML;
@@ -58,9 +8,6 @@ document.addEventListener("DOMContentLoaded", function() {
           droppable.querySelector('span').style.display = 'block';
           droppable.querySelector('#image-upload-preview').style.display = 'block';
           droppable.querySelector('div').innerHTML = '';
-        //           for (var i = 0; i < files.length; i++) {
-        //               droppable.querySelector('div').innerHTML += files[i].name + '<br>';
-        //   }
           droppable.classList.add('filled');
           
         } else {
@@ -82,11 +29,9 @@ document.addEventListener("DOMContentLoaded", function() {
 function readURL(input) {
   if (input.files && input.files[0]) {
       var reader = new FileReader();
-  
       reader.onload = function (e) {
         $('#image-upload-preview').attr('src', e.target.result);
       };
-  
       reader.readAsDataURL(input.files[0]);
     }
   }
@@ -110,5 +55,3 @@ function showComment(id) {
     info.style.display = "none";
     collapse.style.display = "block";
 }
-
-document.addEventListener
