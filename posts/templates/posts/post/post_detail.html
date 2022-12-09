@@ -44,9 +44,9 @@
                         <div class="px-1 text-muted fw-semibold">
                             <small>{{ post.comment_count }} comments</small>
                         </div>
-                        <div class="px-1">
+                        <!-- <div class="px-1">
                             <small><a class="link-underline text-muted fw-semibold" href={% url 'awards_send' %}>award</a></small>
-                        </div>
+                        </div> -->
                         {% if can_delete_post %}
                             {% include "posts/post/post_delete.html" %}
                         {% endif %}
