@@ -19,23 +19,29 @@
                 {% for post in page_obj %}
                     {% include "posts/post/post_snippet.html" %}
                 {% endfor %}
-                <div class="pagination">
-                    <span class="step-links">
-                        {% if page_obj.has_previous %}
-                            <a href="?page=1">&laquo; first</a>
-                            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
-                        {% endif %}
-                        {% if page_obj.paginator.num_pages > 1 %}
-                        <span class="current">
-                            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-                        </span>
-                        {% endif %}
-                        {% if page_obj.has_next %}
-                            <a href="?page={{ page_obj.next_page_number }}">next</a>
-                            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
-                        {% endif %}
-                    </span>
-                </div>
+                {% if page_obj.paginator.num_pages > 1 %}
+                    <div class="pagination d-flex justify-content-center m-2 mb-3">
+                        <div class="bg-secondary d-inline-flex py-1 border border-border rounded-1">
+                            {% if page_obj.paginator.num_pages > 2 and page_obj.number != 1 %}
+                                <a class="fw-semibold link-fade px-1 d-flex align-items-center" href="?page=1" title="First"><svg width="20" height="20" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M18.75 19.5l-7.5-7.5 7.5-7.5m-6 15L5.25 12l7.5-7.5" /></svg></a>
+                                <div class="vr"></div>
+                            {% endif %}
+                            {% if page_obj.has_previous %}
+                                <a class="fw-semibold link-fade px-1 d-flex align-items-center" href="?page={{ page_obj.previous_page_number }}" title="Previous"><svg width="20" height="20" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" /></svg></a>
+                                <div class="vr"></div>
+                            {% endif %}
+                                <div class="text-muted fw-semibold px-1 d-flex align-items-center">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</div>
+                            {% if page_obj.has_next %}
+                                <div class="vr"></div>
+                                <a class="fw-semibold link-fade px-1 d-flex align-items-center" href="?page={{ page_obj.next_page_number }}" title="Next"><svg width="20" height="20" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" /></svg></a>
+                            {% endif %}
+                            {% if page_obj.paginator.num_pages > 2 and page_obj.number != page_obj.paginator.num_pages %}
+                                <div class="vr"></div>
+                                <a class="fw-semibold link-fade px-1 d-flex align-items-center" href="?page={{ page_obj.paginator.num_pages }}" title="Last"><svg width="20" height="20" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5" /></svg></a>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endif %}
             </div>
             <div class="sidebar-right col-lg-2">
                 <div class="container" style="position: sticky; top: 52px;">

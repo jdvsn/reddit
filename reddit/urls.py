@@ -11,6 +11,7 @@ urlpatterns = [
     path('payments/', include('payments.urls')),
     path('messages/', include('messaging.urls')),
     path('awards/', include('awards.urls')),
+    path('notifications/', views.notifications_view, name='notifications'),
     # ACCOUNTS
     path('login/', uviews.login_view, name='login'),
     path('logout/', uviews.logout_view, name='logout'),
@@ -47,7 +48,6 @@ urlpatterns = [
     path('r/<slug:subreddit_url>/comments/<slug:post_url>/vote/<int:comment_id>/', views.vote, name='comment_vote'),
     path('r/<slug:subreddit_url>/comments/<slug:post_url>/comment/<int:comment_id>/', views.post_detail, name='comment_view'),
     path('r/<slug:subreddit_url>/comments/<slug:post_url>/comment/<int:comment_id>/delete/', views.comment_delete, name='comment_delete'),
-    path('notifications/', views.notifications_view, name='notifications')
 ]
 
 urlpatterns += staticfiles_urlpatterns()
