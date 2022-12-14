@@ -22,12 +22,12 @@ IS_HEROKU = "DYNO" in os.environ
 
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
+DEBUG = True
+
 if IS_HEROKU:
     ALLOWED_HOSTS = ['jreddit.herokuapp.com', 'jreddit.joedavison.uk']
-    DEBUG = False
 else:
     ALLOWED_HOSTS = ['192.168.1.121', '127.0.0.1', 'localhost']
-    DEBUG = True
 
 # Application definition
 
