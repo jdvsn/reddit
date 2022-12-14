@@ -1,13 +1,13 @@
 {% extends 'posts/base.html' %}
 
 {% block content %}
-<div class="container">
-    <div class="col-8 m-auto m-2 p-2">
-        <div class="w-100 d-inline-flex justify-content-between">
+<div class="container" style="max-width: 760px">
+    <div class="mx-2 p-2 d-flex flex-column">
+        <div class="w-100 mb-2 d-inline-flex justify-content-between">
             <div class="px-2 mx-2 fw-semibold fs-5">All subreddits</div>
             <a class="px-2 mx-2 fw-semibold fs-5 link-fade" href={% url 'subreddit_create' %}>Create a subreddit</a>
         </div>
-        <div class="w-100 py-2 px-3 m-2 bg-secondary rounded border border-border">
+        <div class="w-100 px-3 py-1 bg-secondary rounded border border-border justify-self-center">
             {% for s in subreddit_list %}
                 <div>
                     <a class="fw-semibold link-fade fs-4" href={% url 'subreddit' s.url %}>r/{{ s.subreddit_name }}</a>

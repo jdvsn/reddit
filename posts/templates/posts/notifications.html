@@ -5,7 +5,9 @@
     <div class="d-flex flex-column m-auto m-2 p-2" style="max-width: 760px">
         <div class="px-2 mx-2 fw-semibold fs-5">Notifications</div>
         <div class="py-2 px-3 m-2 bg-secondary rounded border border-border">
-            <p class="fw-semibold">You currently don't have any notifications. If you receive a reply to a post or comment of yours, it will appear here.</p>
+            {% if count == 0 %}
+                <p class="fw-semibold">You currently don't have any notifications. If you receive a reply to a post or comment of yours, it will appear here.</p>
+            {% endif %}
             {% for x in replies %}
                 <div class="notification">
                     <small class="fw-semibold">

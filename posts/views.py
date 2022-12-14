@@ -224,4 +224,4 @@ def notifications_view(request):
             comment_replies.append(cr)
     comment_replies = sorted(comment_replies, key=attrgetter('created_at'), reverse=True)
     replies = sorted(chain(list(post_replies), list(comment_replies)), key=attrgetter('created_at'), reverse=True)
-    return render(request, 'posts/notifications.html', {'replies': replies})
+    return render(request, 'posts/notifications.html', {'replies': replies, 'count': len(replies)})
