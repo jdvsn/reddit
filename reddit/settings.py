@@ -20,24 +20,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 IS_HEROKU = "DYNO" in os.environ
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-#SECRET_KEY = 'django-insecure-=r0bk4-a+u+^72x4$=b-!t))%e$bctytpks=*#xfo&@d)(h6t&'
-
 SECRET_KEY = os.environ.get('SECRET_KEY')
-
-# SECURITY WARNING: don't run with debug turned on in production!
-# if not IS_HEROKU:
-#     DEBUG = True
-
-DEBUG = True
 
 if IS_HEROKU:
     ALLOWED_HOSTS = ['jreddit.herokuapp.com', 'jreddit.joedavison.uk']
+    DEBUG = False
 else:
     ALLOWED_HOSTS = ['192.168.1.121', '127.0.0.1', 'localhost']
+    DEBUG = True
 
 # Application definition
 
