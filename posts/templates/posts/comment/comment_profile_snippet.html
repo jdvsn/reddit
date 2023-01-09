@@ -1,0 +1,34 @@
+<div class="p-2">
+    <div class="comment rounded bg-post border border-border d-flex flex-row">
+        <div>
+            <div class="votes d-flex flex-column ms-1">
+                <form action={% url 'comment_vote' x.post.subreddit.url x.post.url x.id %} method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="vote" value="+1">
+                    <input class="upvote btn btn-md btn-vote btn-outline-* p-0 m-0" type="submit" value="🡅">
+                </form>
+                <div class="score mx-auto fw-semibold">{{ x.score }}</div>
+                <form class="m-w-100" action={% url 'comment_vote' x.post.subreddit.url x.post.url x.id %} method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="vote" value="-1">
+                    <input class="downvote btn btn-md btn-vote btn-outline-* p-0 m-0" type="submit" value="🡇">
+                </form>
+            </div>
+        </div>
+        <div class=" w-100">
+            <div class="container d-flex flex-column p-0 m-0">
+                <div class="post-info">
+                    <small class="text-muted">
+                        comment {{ x.when }} on "<a class="text-muted link-underline" href={% url 'post_detail' x.post.subreddit.url x.post.url %}>{{ x.post.post_title }}</a>"
+                    </small>
+                </div>
+                <div class="post-preview p-1 position-relative">
+                    <a href={% url 'comment_view' x.post.subreddit.url x.post.url x.id %} class="stretched-link"></a>                               
+                    <div class="post-preview-container d-flex flex-column rounded bg-secondary p-2 pt-1">
+                        <p>{{ x.comment_text }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

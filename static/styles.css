@@ -213,7 +213,7 @@ img{
     max-height: 75vh;
 }
 
-.navbar-brand{
-    left: 50%;
-    transform: translateX(-50%);
+.hidden{
+    display: none;
+    transition: all 0.5s 0s;
 }

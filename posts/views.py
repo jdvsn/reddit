@@ -16,21 +16,20 @@ class SubredditIndexView(generic.ListView):
     model = Subreddit
     template_name = 'posts/subreddit/subreddit_index.html'
 
-def home_view(request, filter):
-    subreddits = Subreddit.objects.all()
+def home_view(request, sort):
     posts = Post.objects.all()
-    if filter:
-        posts = posts.order_by(filter)
+    if sort:
+        posts = posts.order_by(sort)
     paginator = Paginator(posts, 8)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    return render(request, 'posts/home.html', {'page_obj': page_obj, 'subreddits': subreddits})
+    return render(request, 'posts/home.html', {'page_obj': page_obj})
 
-def subreddit_view(request, subreddit_url, filter):
+def subreddit_view(request, subreddit_url, sort):
     subreddit = get_object_or_404(Subreddit, url=subreddit_url)
     posts = subreddit.posts.all()
-    if filter:
-        posts = posts.order_by(filter)
+    if sort:
+        posts = posts.order_by(sort)
     paginator = Paginator(posts, 8)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -174,40 +173,22 @@ def comment_delete(request, post_url, subreddit_url, comment_id):
             comment.delete()
     return HttpResponseRedirect(reverse('post_detail', args=[subreddit_url, post_url]))
 
-def profile_view(request, user, show_posts, show_comments, filter):
+def profile_view(request, user, filter, sort):
     user = User.objects.get(username=user)
-    posts = user.posts.all()
-    comments = user.comments.all()
-    if show_posts and show_comments == True:
-        if filter:
-            key = attrgetter(filter)
-        else:
-            key = attrgetter('created_at')
-        result = sorted(chain(list(posts), list(comments)), key=key, reverse=True)
-    elif show_posts == True:
-        if filter:
-            result = posts.order_by(filter)
-        else:  
-            result = posts
-    elif show_comments == True:
-        if filter:
-            result = comments.order_by(filter)
-        else:
-            result = comments
-    paginator = Paginator(result, 8)
+    if filter:
+        objects = eval(filter).order_by('-created_at')
+        if sort:
+            objects = objects.order_by(sort)  
+    else:
+        key = attrgetter('created_at')
+        if sort:
+            key = attrgetter(sort) 
+        objects = sorted(chain(list(user.posts.all()), list(user.comments.all())), key=key, reverse=True)   
+    paginator = Paginator(objects, 8)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     awards = Award.received_awards_count(user)
-    return render(request, 'posts/profile.html', {
-        'user': user, 
-        'page_obj' : page_obj, 
-        'show_posts': show_posts, 
-        'show_comments': show_comments,
-        'total_awards': awards['total'],
-        'gold_awards': awards['gold'],
-        'silver_awards': awards['silver'],
-        'bronze_awards': awards['bronze'],
-        })
+    return render(request, 'posts/profile.html', {'user': user, 'page_obj' : page_obj, 'filter': filter, 'awards': awards})
 
 @login_required(login_url='/login/')
 def notifications_view(request):

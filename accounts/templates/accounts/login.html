@@ -6,10 +6,10 @@
         <h5 class="fw-semibold m-auto mb-3">Log In</h5>
         <form class="login-form d-flex flex-column" action={% url 'login' %} method="post">  
             {% csrf_token %}  
-            <div class="p-1">
+            <div class="username p-1">
             {{ form.username }}
             </div>
-            <div class="p-1">
+            <div class="password p-1">
             {{ form.password }}
             </div>
             {% if form.non_field_errors %}

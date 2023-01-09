@@ -41,10 +41,10 @@ function hideComment(id) {
     var id = id.slice(11);
     var comment = document.getElementById('comment' + id);
     var info = document.getElementById('infoComment' + id);
-    var collapse = document.getElementById('hideComment' + id)
-    comment.style.display = "none";
-    info.style.display = "block";
-    collapse.style.display = "none";
+    var collapse = document.getElementById('hideComment' + id);
+    comment.classList.add('hidden');
+    info.classList.remove('hidden');
+    collapse.classList.add('hidden');
 }
 
 function showComment(id) {
@@ -52,7 +52,7 @@ function showComment(id) {
     var comment = document.getElementById('comment' + id);
     var info = document.getElementById('infoComment' + id);
     var collapse = document.getElementById('hideComment' + id);
-    comment.style.display = "block";
-    info.style.display = "none";
-    collapse.style.display = "block";
+    comment.classList.remove('hidden');
+    info.classList.add('hidden');
+    collapse.classList.remove('hidden');
 }
